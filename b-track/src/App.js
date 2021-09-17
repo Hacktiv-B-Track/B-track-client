@@ -1,13 +1,16 @@
-// import { Switch, Route } from "react-router-dom";
+import { Switch, Route } from "react-router-dom";
+import Navbar from "./pages/Navbar";
+import DashboardDepartment from "./pages/DashboardDepartment";
 
 function App() {
   return (
     <>
-      <h1 className="text-blue-500">tes tailwind</h1>
-      {/* <Switch>
-        <Route exact path="/" component={Tes} />
-        <Route path="/add" component={Tes} />
-      </Switch> */}
+      <Navbar />
+
+      <Switch>
+        <Route exact path="/" component={DashboardDepartment} />
+        {/* <Route path="/add" component={Tes} /> */}
+      </Switch>
     </>
   );
 }
