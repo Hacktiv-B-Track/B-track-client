@@ -7,11 +7,13 @@ import {
 } from "react-router-dom";
 import NavBar from "./components/NavBar";
 import Login from "./pages/Login";
+import Navbar from "./pages/Navbar";
 
 function App() {
   return (
     <div className="App">
-      <NavBar/>
+      <Navbar />
+      {/* <NavBar/> */}
       <Router>
       <div>
         <nav>
@@ -20,10 +22,10 @@ function App() {
               <Link to="/login">Login</Link>
             </li>
             <li>
-              <Link to="/">Home</Link>
+              <Link to="/dashboard/:departmentId">Dashboard Department</Link>
             </li>
             <li>
-              <Link to="/about">About</Link>
+              <Link to="/budget/:budgetId">About</Link>
             </li>
             <li>
               <Link to="/users">Users</Link>
@@ -36,15 +38,15 @@ function App() {
         <Switch>
           <Route path="/login">
             <Login />
-          </Route>
-          <Route path="/about">
-            <About />
-          </Route>
           <Route path="/users">
             <Users />
           </Route>
-          <Route exact path="/">
-            <Home />
+          </Route>
+          <Route path="/dashboard/:departmentId">
+            <Dashboard />
+          </Route>
+          <Route path="/budget/:budgetId">
+            <BudgetDetail />
           </Route>
         </Switch>
       </div>
@@ -54,12 +56,12 @@ function App() {
   );
 }
 
-function Home() {
-  return <h2>Home</h2>;
+function Dashboard() {
+  return <h2>Dashboard</h2>;
 }
 
-function About() {
-  return <h2>About</h2>;
+function BudgetDetail() {
+  return <h2>Budget Detail</h2>;
 }
 
 function Users() {
