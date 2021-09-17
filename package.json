@@ -1,0 +1,20 @@
+{
+  "name": "b-track-client",
+  "version": "1.0.0",
+  "description": "B-Track is a financial management application to manage budgeting and expenses for your company or team.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Hacktiv-B-Track/B-track-client.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Hacktiv-B-Track/B-track-client/issues"
+  },
+  "homepage": "https://github.com/Hacktiv-B-Track/B-track-client#readme"
+}
