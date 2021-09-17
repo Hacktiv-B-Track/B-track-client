@@ -1,11 +1,14 @@
-import logo from "./logo.svg";
-import "./App.css";
+// import { Switch, Route } from "react-router-dom";
 
 function App() {
   return (
-    <div className="App">
+    <>
       <h1 className="text-blue-500">tes tailwind</h1>
-    </div>
+      {/* <Switch>
+        <Route exact path="/" component={Tes} />
+        <Route path="/add" component={Tes} />
+      </Switch> */}
+    </>
   );
 }
 
