@@ -1,4 +1,3 @@
-import logo from "./logo.svg";
 import "./App.css";
 import {
   BrowserRouter as Router,
@@ -6,15 +5,20 @@ import {
   Route,
   Link
 } from "react-router-dom";
+import NavBar from "./components/NavBar";
+import Login from "./pages/Login";
 
 function App() {
   return (
     <div className="App">
-      <h1 className="text-blue-500">tes tailwind</h1>
+      <NavBar/>
       <Router>
       <div>
         <nav>
           <ul>
+            <li>
+              <Link to="/login">Login</Link>
+            </li>
             <li>
               <Link to="/">Home</Link>
             </li>
@@ -30,13 +34,16 @@ function App() {
         {/* A <Switch> looks through its children <Route>s and
             renders the first one that matches the current URL. */}
         <Switch>
+          <Route path="/login">
+            <Login />
+          </Route>
           <Route path="/about">
             <About />
           </Route>
           <Route path="/users">
             <Users />
           </Route>
-          <Route path="/">
+          <Route exact path="/">
             <Home />
           </Route>
         </Switch>
