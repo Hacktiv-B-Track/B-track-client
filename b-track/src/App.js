@@ -1,9 +1,10 @@
 // import { Switch, Route } from "react-router-dom";
+import Navbar from "./pages/Navbar";
 
 function App() {
   return (
     <>
-      <h1 className="text-blue-500">tes tailwind</h1>
+      <Navbar />
       {/* <Switch>
         <Route exact path="/" component={Tes} />
         <Route path="/add" component={Tes} />
