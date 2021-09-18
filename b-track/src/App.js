@@ -13,6 +13,8 @@ function App() {
       <NavBar />
       {/* <Switch> */}
       <Route exact path="/" component={BudgetDetail} />
+      {/* <Route exact path="/" component={DashboardDepartment} /> */}
+
       {/* <Route path="/login" component={Login} />
         <Route path="/users" component={Users} />
         <Route
