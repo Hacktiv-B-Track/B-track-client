@@ -1,4 +1,4 @@
-import FormModal from "../components/FormModal";
+import FormTransactionModal from "../components/FormTransactionModal";
 import { useDispatch } from "react-redux";
 import { toggleModal } from "../store/action";
 
@@ -13,7 +13,7 @@ export default function BudgetDetail() {
     <section className="text-gray-600 body-font">
       <div className="container px-5 py-24 mx-auto max-w-7x1">
         {/* Modal Add Transaction */}
-        <FormModal />
+        <FormTransactionModal name="add" />
 
         {/* Table */}
         <div className="py-2 pr-10 -my-2 overflow-x-auto sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
