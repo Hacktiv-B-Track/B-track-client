@@ -32,6 +32,8 @@ export default function DashboardFinance() {
 
                 {/* Departemen */}
                 <div className='border mt-5'>
+
+                    {/* Departemen Head */}
                     <div className="flex flex-wrap w-full p-4 mb-4">
                         <div className="w-full mb-6 lg:mb-0">
                         <h1 className="mb-2 text-5xl font-bold text-gray-900 sm:text-4xl title-font">
@@ -40,6 +42,9 @@ export default function DashboardFinance() {
                         <div className="w-20 h-1 bg-indigo-500 rounded"></div>
                         </div>
                     </div>
+                    {/* /Departemen Head */}
+                    
+                    {/* Departemen Body */}
                     <div className='grid grid-cols-4 gap-4'>
                         {/* Card Pie */}
                         <div className="p-4 border">
@@ -102,6 +107,8 @@ export default function DashboardFinance() {
                             </div>
                         </div>
                     </div>
+                    {/* Departemen Body */}
+                    
                 </div>
                 {/* /Departemen */}
 
