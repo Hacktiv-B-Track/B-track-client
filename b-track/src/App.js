@@ -5,24 +5,26 @@ import Login from "./pages/Login";
 // import Navbar from "./pages/Navbar";
 import DashboardDepartment from "./pages/DashboardDepartment";
 import BudgetDetail from "./pages/BudgetDetail";
+import DashboardFinance from "./pages/DashboardFinance";
 
-import FormModal from "./components/FormModal";
+// import FormModal from "./components/FormModal";
 
 function App() {
   return (
     <div className="App">
       {/* <FormModal /> */}
       <NavBar />
-      {/* <Switch> */}
+      <Switch>
       <Route exact path="/" component={BudgetDetail} />
-      {/* <Route path="/login" component={Login} />
-        <Route path="/users" component={Users} />
-        <Route
-          path="/dashboard/:departmentId"
-          component={DashboardDepartment}
-        />
-        <Route path="/budget/:budgetId" component={BudgetDetail} />
-      </Switch> */}
+      <Route path="/login" component={Login} />
+      <Route path="/users" component={Users} />
+      <Route exact path="/dashboard/finance" component={DashboardFinance} />
+      <Route
+        path="/dashboard/:departmentId"
+        component={DashboardDepartment}
+      />
+      <Route path="/budget/:budgetId" component={BudgetDetail} />
+      </Switch>
 
       {/* <nav>
             <ul>
