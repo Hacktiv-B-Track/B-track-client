@@ -1,7 +1,7 @@
 import Modal from "react-modal";
 import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { toggleModal } from "../store/action";
+import { toggleModalFormDetail } from "../store/action";
 
 const customStyles = {
   content: {
@@ -16,7 +16,7 @@ const customStyles = {
 
 export default function FormTransactionModal() {
   const dispatch = useDispatch();
-  const isModal = useSelector((state) => state.isModal);
+  const isModal = useSelector((state) => state.isModalFormDetail);
   const [price, setPrice] = useState(0);
   const [namePrice, setNamePrice] = useState("");
   const [name, setName] = useState("");
@@ -25,7 +25,7 @@ export default function FormTransactionModal() {
   const [category, setCategory] = useState("");
 
   const closeModal = () => {
-    dispatch(toggleModal(false));
+    dispatch(toggleModalFormDetail(false));
   };
 
   const priceHandler = (priceValue) => {

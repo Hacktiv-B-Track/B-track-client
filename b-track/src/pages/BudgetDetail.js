@@ -1,12 +1,16 @@
-import FormTransactionModal from "../components/FormTransactionModal";
 import { useDispatch } from "react-redux";
-import { toggleModal } from "../store/action";
+import { toggleModalFormDetail, toggleModalImage } from "../store/action";
+import FormTransactionModal from "../components/FormTransactionModal";
+import InvoiceModal from "../components/InvoiceModal";
 
 export default function BudgetDetail() {
   const dispatch = useDispatch();
 
   const showModal = () => {
-    dispatch(toggleModal(true));
+    dispatch(toggleModalFormDetail(true));
+  };
+  const showImageModal = () => {
+    dispatch(toggleModalImage(true));
   };
 
   return (
@@ -14,6 +18,7 @@ export default function BudgetDetail() {
       <div className="container px-5 py-24 mx-auto max-w-7x1">
         {/* Modal Add Transaction */}
         <FormTransactionModal name="add" />
+        <InvoiceModal image="https://images.unsplash.com/photo-1628191137573-dee64e727614?ixid=MnwxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80" />
 
         {/* Table */}
         <div className="py-2 pr-10 -my-2 overflow-x-auto sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
@@ -38,6 +43,12 @@ export default function BudgetDetail() {
                     Amount
                   </th>
                   <th className="px-6 py-3 text-sm leading-4 tracking-wider text-left text-blue-500 border-b-2 border-gray-300 ">
+                    Category
+                  </th>
+                  <th className="px-6 py-3 text-sm leading-4 tracking-wider text-left text-blue-500 border-b-2 border-gray-300 ">
+                    By
+                  </th>
+                  <th className="px-6 py-3 text-sm leading-4 tracking-wider text-left text-blue-500 border-b-2 border-gray-300 ">
                     Invoice
                   </th>
                   <th className="px-6 py-3 border-b-2 border-gray-300"></th>
@@ -56,12 +67,16 @@ export default function BudgetDetail() {
                   <td className="px-6 py-4 text-sm leading-5 text-blue-900 whitespace-no-wrap border-b border-gray-500 ">
                     Rp. 200.000
                   </td>
-                  <td className="border-b border-gray-500">
-                    <img
-                      className="object-scale-down w-1\/2 rounded h-72 my-5"
-                      src="https://images.unsplash.com/photo-1628191137573-dee64e727614?ixid=MnwxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80"
-                      alt="invoice"
-                    />
+                  <td className="px-6 py-4 text-sm leading-5 text-blue-900 whitespace-no-wrap border-b border-gray-500 ">
+                    transportasi
+                  </td>
+                  <td className="px-6 py-4 text-sm leading-5 text-blue-900 whitespace-no-wrap border-b border-gray-500 ">
+                    user 1
+                  </td>
+                  <td className="px-6 py-4 text-sm leading-5 text-blue-900 whitespace-no-wrap border-b border-gray-500 ">
+                    <button className="text-blue-500" onClick={showImageModal}>
+                      see invoice
+                    </button>
                   </td>
                   <td className="px-6 py-4 text-sm leading-5 text-right whitespace-no-wrap border-b border-gray-500 ">
                     <div className="flex justify-between w-40">
@@ -86,12 +101,16 @@ export default function BudgetDetail() {
                   <td className="px-6 py-4 text-sm leading-5 text-blue-900 whitespace-no-wrap border-b border-gray-500 ">
                     Rp. 200.000
                   </td>
-                  <td className="border-b border-gray-500">
-                    <img
-                      className="object-scale-down w-1\/2 rounded h-72 my-5"
-                      src="https://images.unsplash.com/photo-1628191137573-dee64e727614?ixid=MnwxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80"
-                      alt="invoice"
-                    />
+                  <td className="px-6 py-4 text-sm leading-5 text-blue-900 whitespace-no-wrap border-b border-gray-500 ">
+                    alat kantor
+                  </td>
+                  <td className="px-6 py-4 text-sm leading-5 text-blue-900 whitespace-no-wrap border-b border-gray-500 ">
+                    user 2
+                  </td>
+                  <td className="px-6 py-4 text-sm leading-5 text-blue-900 whitespace-no-wrap border-b border-gray-500 ">
+                    <button className="text-blue-500" onClick={showImageModal}>
+                      see invoice
+                    </button>
                   </td>
                   <td className="px-6 py-4 text-sm leading-5 text-right whitespace-no-wrap border-b border-gray-500 ">
                     <div className="flex justify-between w-40">

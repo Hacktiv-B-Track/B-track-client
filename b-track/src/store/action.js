@@ -1,8 +1,15 @@
-import { TOGGLE_MODAL } from "./actionType";
+import { TOGGLE_MODAL_FORM_DETAIL, TOGGLE_MODAL_IMAGE } from "./actionType";
 
-export function toggleModal(payload) {
+export function toggleModalFormDetail(payload) {
   return {
-    type: TOGGLE_MODAL,
+    type: TOGGLE_MODAL_FORM_DETAIL,
+    payload: payload,
+  };
+}
+
+export function toggleModalImage(payload) {
+  return {
+    type: TOGGLE_MODAL_IMAGE,
     payload: payload,
   };
 }
