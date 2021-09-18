@@ -1,1 +1,1 @@
-// export const TES_ADD = "TES_ADD";
+export const TOGGLE_MODAL = "TOGGLE_MODAL";

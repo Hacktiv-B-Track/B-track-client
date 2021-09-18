@@ -6,8 +6,6 @@ import Login from "./pages/Login";
 import DashboardDepartment from "./pages/DashboardDepartment";
 import BudgetDetail from "./pages/BudgetDetail";
 
-import FormModal from "./components/FormModal";
-
 function App() {
   return (
     <div className="App">

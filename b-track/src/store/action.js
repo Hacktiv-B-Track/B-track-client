@@ -1,11 +1,11 @@
-import {} from "./actionType";
+import { TOGGLE_MODAL } from "./actionType";
 
-// export function addTes(payload) {
-//   return {
-//     type: TES_ADD,
-//     payload: payload,
-//   };
-// }
+export function toggleModal(payload) {
+  return {
+    type: TOGGLE_MODAL,
+    payload: payload,
+  };
+}
 
 // export function fetchTes() {
 //   return async function (dispatch, getState) {
