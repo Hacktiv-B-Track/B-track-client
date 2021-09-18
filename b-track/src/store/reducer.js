@@ -1,14 +1,16 @@
-import {} from "./actionType";
+import { TOGGLE_MODAL } from "./actionType";
 
-const initialState = {};
+const initialState = {
+  isModal: false,
+};
 
 export default function reducer(state = initialState, action) {
   switch (action.type) {
-    // case TES_ADD:
-    //   return {
-    //     ...state,
-    //     isTes: action.payload,
-    //   };
+    case TOGGLE_MODAL:
+      return {
+        ...state,
+        isModal: action.payload,
+      };
     default:
       return state;
   }

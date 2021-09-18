@@ -4,21 +4,23 @@ import NavBar from "./components/NavBar";
 import Login from "./pages/Login";
 // import Navbar from "./pages/Navbar";
 import DashboardDepartment from "./pages/DashboardDepartment";
+import BudgetDetail from "./pages/BudgetDetail";
 
 function App() {
   return (
     <div className="App">
+      {/* <FormModal /> */}
       <NavBar />
-      <Switch>
-        {/* <Route exact path="/" /> */}
-        <Route path="/login" component={Login} />
+      {/* <Switch> */}
+      <Route exact path="/" component={BudgetDetail} />
+      {/* <Route path="/login" component={Login} />
         <Route path="/users" component={Users} />
         <Route
           path="/dashboard/:departmentId"
           component={DashboardDepartment}
         />
         <Route path="/budget/:budgetId" component={BudgetDetail} />
-      </Switch>
+      </Switch> */}
 
       {/* <nav>
             <ul>
@@ -38,10 +40,6 @@ function App() {
           </nav> */}
     </div>
   );
-}
-
-function BudgetDetail() {
-  return <h2>Budget Detail</h2>;
 }
 
 function Users() {
