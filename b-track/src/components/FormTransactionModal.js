@@ -2,6 +2,7 @@ import Modal from "react-modal";
 import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { toggleModalFormDetail } from "../store/action";
+import { idrCurrency } from "../helpers/currency";
 
 const customStyles = {
   content: {
@@ -30,12 +31,7 @@ export default function FormTransactionModal() {
 
   const priceHandler = (priceValue) => {
     setPrice(priceValue);
-    setNamePrice(
-      new Intl.NumberFormat("id-ID", {
-        style: "currency",
-        currency: "IDR",
-      }).format(priceValue)
-    );
+    setNamePrice(idrCurrency(priceValue));
   };
 
   const submitHandler = (e) => {
