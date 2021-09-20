@@ -52,7 +52,7 @@ export default function InvoiceModal() {
               </svg>
             </button>
           </div>
-          <div className="w-1/2 mx-auto h-1/2">
+          <div className="w-2/5 mx-auto h-2/5">
             <img className="mt-5 rounded " src={modalImageUrl} alt="invoice" />
           </div>
         </div>
