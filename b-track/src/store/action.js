@@ -46,9 +46,11 @@ export function addTransaction(payload) {
 export const fetchTransactions = () => {
   return async (dispatch, getState) => {
     try {
+      dispatch(loadingToggle(true));
       const response = await axios.get(`/`);
       const transactions = response.data;
       dispatch(addTransactions(transactions));
+      return Promise.resolve(transactions);
     } catch (error) {
       console.error(error);
     }

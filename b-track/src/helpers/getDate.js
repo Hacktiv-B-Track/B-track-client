@@ -9,3 +9,16 @@ export const getDate = (isoDate) => {
 
   return [date, month, year].join("-");
 };
+
+export const getShortMonth = (isoDate) => {
+  const newDate = new Date(isoDate);
+  let shortMonth = newDate.toLocaleString("default", { month: "short" });
+  return shortMonth;
+};
+
+export const getFullYear = (isoDate) => {
+  const newDate = new Date(isoDate);
+  let year = newDate.getFullYear();
+
+  return year;
+};

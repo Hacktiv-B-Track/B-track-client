@@ -20,7 +20,6 @@ const customStyles = {
 export default function FormTransactionModal(props) {
   const dispatch = useDispatch();
   const isModal = useSelector((state) => state.isModalFormDetail);
-  const transaction = useSelector((state) => state.transaction);
   const [price, setPrice] = useState(0);
   const [namePrice, setNamePrice] = useState("");
   const [name, setName] = useState("");
@@ -48,10 +47,6 @@ export default function FormTransactionModal(props) {
     }
   }, [props.id]);
 
-  console.log(props.id, "di modal");
-  console.log(transaction);
-  console.log(name, "name usestate");
-
   const closeModal = () => {
     dispatch(toggleModalFormDetail(false));
   };
@@ -76,7 +71,7 @@ export default function FormTransactionModal(props) {
     //* get access token for header
 
     // const formData = new FormData();
-    // formData.append("invoice", file);
+    //! formData.append("invoice-file", file); -> pasang pas hit button scan file
     // header: access token
     // body: name, amount, date, invoice, category(selectoption), budgetId(routeparams), userName(getDateBudget)
     // axios.post("api/uploadfile", formData);
