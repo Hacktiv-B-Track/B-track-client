@@ -7,6 +7,7 @@ import Register from "./pages/Register";
 import DashboardDepartment from "./pages/DashboardDepartment";
 import BudgetDetail from "./pages/BudgetDetail";
 import DashboardFinance from "./pages/DashboardFinance";
+import BudgetDetailFinance from "./pages/BudgetDetailFinance";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { fetchCategories } from "./store/action";
@@ -14,18 +15,16 @@ import { fetchCategories } from "./store/action";
 function App() {
   const location = useLocation();
   const currentPath = location.pathname;
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(fetchCategories())
-  }, [])
+    dispatch(fetchCategories());
+  }, []);
 
   return (
     <div className="App">
       {/* <FormModal /> */}
-      {currentPath !== "/login" && currentPath !== "/register" && (
-        <NavBar />
-      )}
+      {currentPath !== "/login" && currentPath !== "/register" && <NavBar />}
       <Switch>
         {/* <Route exact path="/" component={} /> */}
         <Route path="/login" component={Login} />
@@ -35,6 +34,10 @@ function App() {
         <Route
           path="/dashboard/:departmentId"
           component={DashboardDepartment}
+        />
+        <Route
+          path="/budget/finance/:budgetId"
+          component={BudgetDetailFinance}
         />
         <Route path="/budget/:budgetId" component={BudgetDetail} />
       </Switch>

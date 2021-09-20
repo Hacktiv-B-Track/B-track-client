@@ -1,24 +1,19 @@
 import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { toast } from "react-toastify";
 import {
-  toggleModalFormDetail,
   toggleModalImage,
   fetchTransactions,
   addModalImageUrl,
-  deleteTransaction,
   loadingToggle,
 } from "../store/action";
 import LineChartTransaction from "../components/LineChartTransaction";
-import FormTransactionModal from "../components/FormTransactionModal";
 import InvoiceModal from "../components/InvoiceModal";
 import { idrCurrency } from "../helpers/currency";
 import { getDate, getFullYear } from "../helpers/getDate";
 
-export default function BudgetDetail() {
+export default function BudgetDetailFinance() {
   const dispatch = useDispatch();
   const transactions = useSelector((state) => state.transactions);
-  const [transactionId, setTransactionId] = useState("");
   const [lineLabel, setLineLabel] = useState([]);
   const [lineData, setLineData] = useState([]);
   const isLoading = useSelector((state) => state.isLoading);
@@ -48,35 +43,9 @@ export default function BudgetDetail() {
       });
   }, []);
 
-  const showModal = (transactionId) => {
-    if (typeof transactionId === "number") {
-      setTransactionId(transactionId);
-      dispatch(toggleModalFormDetail(true));
-    } else {
-      setTransactionId(null);
-      dispatch(toggleModalFormDetail(true));
-    }
-  };
-
   const showImageModal = (url) => {
     dispatch(addModalImageUrl(url));
     dispatch(toggleModalImage(true));
-  };
-
-  const deleteHandler = (transactionId) => {
-    dispatch(deleteTransaction(transactionId))
-      .then((response) => {
-        toast.success(response.message, {
-          position: "top-center",
-          autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-        });
-      })
-      .catch((err) => console.log(err));
   };
 
   if (isLoading) {
@@ -101,25 +70,14 @@ export default function BudgetDetail() {
             data={{ labels: lineLabel, datasets: [lineData] }}
           />
         </div>
-
-        {/* <pre>{JSON.stringify(lineLabel, null, 2)}</pre>
-        <pre>{JSON.stringify(lineData, null, 2)}</pre> */}
-        {/* <pre>{JSON.stringify(transactions, null, 2)}</pre> */}
-
-        {/* Modal Add Transaction */}
-        <FormTransactionModal id={transactionId} />
+        {/* Modal Show Invoice */}
         <InvoiceModal />
 
         {/* Table */}
         <div className="py-2 pr-10 -my-2 overflow-x-auto sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
           <div className="inline-block min-w-full px-8 pt-3 overflow-hidden align-middle bg-white rounded-bl-lg rounded-br-lg shadow shadow-dashboard">
             <h1 className="mb-5 text-5xl font-bold">{transactions.name}</h1>
-            <button
-              className="px-5 py-2 mb-10 text-blue-500 transition duration-300 border border-blue-500 rounded hover:bg-blue-700 hover:text-white focus:outline-none"
-              onClick={showModal}
-            >
-              Add New Transaction
-            </button>
+
             <table className="min-w-full">
               <thead>
                 <tr>
@@ -141,7 +99,6 @@ export default function BudgetDetail() {
                   <th className="px-6 py-3 text-sm leading-4 tracking-wider text-left text-blue-500 border-b-2 border-gray-300 ">
                     Invoice
                   </th>
-                  <th className="px-6 py-3 border-b-2 border-gray-300"></th>
                 </tr>
               </thead>
               <tbody className="bg-white">
@@ -172,22 +129,6 @@ export default function BudgetDetail() {
                         >
                           see invoice
                         </button>
-                      </td>
-                      <td className="px-6 py-4 text-sm leading-5 text-right whitespace-no-wrap border-b border-gray-500 ">
-                        <div className="flex justify-between w-40">
-                          <button
-                            className="px-5 py-2 text-blue-500 transition duration-300 border border-blue-500 rounded hover:bg-blue-700 hover:text-white focus:outline-none"
-                            onClick={() => showModal(transaction.id)}
-                          >
-                            Edit
-                          </button>
-                          <button
-                            className="px-5 py-2 text-blue-500 transition duration-300 border border-blue-500 rounded hover:bg-blue-700 hover:text-white focus:outline-none"
-                            onClick={() => deleteHandler(transaction.id)}
-                          >
-                            Delete
-                          </button>
-                        </div>
                       </td>
                     </tr>
                   );

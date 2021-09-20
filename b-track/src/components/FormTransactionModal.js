@@ -1,4 +1,5 @@
 import Modal from "react-modal";
+import { useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
@@ -6,6 +7,7 @@ import {
   fetchTransaction,
   fetchScanInvoice,
   postTransaction,
+  editTransaction,
 } from "../store/action";
 import { idrCurrency } from "../helpers/currency";
 
@@ -24,6 +26,7 @@ const customStyles = {
 
 export default function FormTransactionModal(props) {
   const dispatch = useDispatch();
+  const { budgetId } = useParams();
   const isModal = useSelector((state) => state.isModalFormDetail);
   const [price, setPrice] = useState(0);
   const [namePrice, setNamePrice] = useState("");
@@ -87,14 +90,15 @@ export default function FormTransactionModal(props) {
       invoice:
         "https://ik.imagekit.io/ddtyiwgu4rm/invoice-kledo-1_pHFD1g4Hv.jpg",
     };
-
-    dispatch(postTransaction(data));
+    if (props.id) {
+      dispatch(editTransaction(data, budgetId));
+    } else {
+      dispatch(postTransaction(data, budgetId));
+    }
 
     //TODO
-    //* add edit pake props
-    //* get budgetId from routeParam
-    //* get userName from budgetDetail
-    //* get access token for header
+    //* date edit not auto
+    //* change select option getAll from category for add & edit
   };
 
   // if (isLoading) {
@@ -121,32 +125,6 @@ export default function FormTransactionModal(props) {
         ariaHideApp={false}
       >
         <div className="w-96 h-96">
-          {/* <div className="flex-row w-full text-xs md:flex md:space-x-4">
-            <div className="w-full mb-3 space-y-2 text-xs">
-              <label className="py-2 font-semibold text-gray-600 ">
-                Invoice
-              </label>
-              <div className="relative flex flex-wrap items-stretch w-full mb-4">
-                <input
-                  type="file"
-                  onChange={(e) => setFile(e.target.files[0])}
-                />
-              </div>
-            </div>
-
-            <div className="w-full mb-3 space-y-2 text-xs">
-              <label className="py-2 font-semibold text-gray-600 ">OCR</label>
-              <div className="relative flex flex-wrap items-stretch w-full mb-4">
-                <button
-                  className="px-5 py-2 mb-2 text-sm font-medium tracking-wider text-gray-600 bg-white border rounded-full shadow-sm md:mb-0 hover:shadow-lg hover:bg-gray-100"
-                  onClick={(e) => scanFile(e)}
-                >
-                  Scan File
-                </button>
-              </div>
-            </div>
-          </div> */}
-
           <form className="mt-5" onSubmit={(e) => submitHandler(e)}>
             <div className="w-full mb-3 space-y-2 text-xs">
               <div className="w-full mb-3 space-y-2 text-xs">
