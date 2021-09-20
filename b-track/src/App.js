@@ -7,10 +7,19 @@ import Register from "./pages/Register";
 import DashboardDepartment from "./pages/DashboardDepartment";
 import BudgetDetail from "./pages/BudgetDetail";
 import DashboardFinance from "./pages/DashboardFinance";
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { fetchCategories } from "./store/action";
 
 function App() {
   const location = useLocation();
   const currentPath = location.pathname;
+  const dispatch = useDispatch()
+
+  useEffect(() => {
+    dispatch(fetchCategories())
+  }, [])
+
   return (
     <div className="App">
       {/* <FormModal /> */}

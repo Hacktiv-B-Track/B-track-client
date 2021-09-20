@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { useHistory } from "react-router-dom";
+import axios from '../apis/server'
+import { toast } from 'react-toastify';
 
 export default function Login() {
     const [email, setEmail] = useState('')
@@ -9,8 +11,33 @@ export default function Login() {
 
     function handleSubmit(e) {
         e.preventDefault()
-        console.log(email, password);
+        axios.post('/login', {
+            email, password
+        })
+        .then(res => {
+            localStorage.setItem('access_token', res.data.access_token);
+            localStorage.setItem('username', res.data.username);
+            localStorage.setItem('role', res.data.role);
+        })
+        .then(() => {
+            toast('Login Succesful!', {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                });
+                history.push('/dashboard/:departmentId')
 
+            // Swal.fire({
+            //     position: 'center',
+            //     icon: 'success',
+            //     title: 'Added to watchlist',
+            // })
+        })
+        .catch(err=>console.log(err))
     }
 
     function handleOnClick(e) {
