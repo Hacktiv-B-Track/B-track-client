@@ -14,10 +14,10 @@ const customStyles = {
   },
 };
 
-export default function InvoiceModal(props) {
+export default function InvoiceModal() {
   const dispatch = useDispatch();
   const isModal = useSelector((state) => state.isModalImage);
-  const [image] = useState(props.image);
+  const modalImageUrl = useSelector((state) => state.modalImageUrl);
 
   const closeModal = () => {
     dispatch(toggleModalImage(false));
@@ -30,7 +30,7 @@ export default function InvoiceModal(props) {
         // onAfterOpen={afterOpenModal}
         onRequestClose={closeModal}
         style={customStyles}
-        contentLabel="Add & Edit Modal"
+        contentLabel="Show image modal"
         ariaHideApp={false}
       >
         <div className="w-auto h-auto">
@@ -52,7 +52,9 @@ export default function InvoiceModal(props) {
               </svg>
             </button>
           </div>
-          <img className="mt-5 rounded " src={image} alt="invoice" />
+          <div className="w-1/2 mx-auto h-1/2">
+            <img className="mt-5 rounded " src={modalImageUrl} alt="invoice" />
+          </div>
         </div>
       </Modal>
     </>

@@ -1,29 +1,117 @@
-import { useDispatch } from "react-redux";
-import { toggleModalFormDetail, toggleModalImage } from "../store/action";
+import { useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { toast } from "react-toastify";
+import {
+  toggleModalFormDetail,
+  toggleModalImage,
+  fetchTransactions,
+  addModalImageUrl,
+  deleteTransaction,
+  loadingToggle,
+} from "../store/action";
+import LineChartTransaction from "../components/LineChartTransaction";
 import FormTransactionModal from "../components/FormTransactionModal";
 import InvoiceModal from "../components/InvoiceModal";
+import { idrCurrency } from "../helpers/currency";
+import { getDate, getFullYear } from "../helpers/getDate";
 
 export default function BudgetDetail() {
   const dispatch = useDispatch();
+  const transactions = useSelector((state) => state.transactions);
+  const [transactionId, setTransactionId] = useState("");
+  const [lineLabel, setLineLabel] = useState([]);
+  const [lineData, setLineData] = useState([]);
+  const isLoading = useSelector((state) => state.isLoading);
 
-  const showModal = () => {
-    dispatch(toggleModalFormDetail(true));
+  useEffect(() => {
+    dispatch(fetchTransactions())
+      .then((response) => {
+        let label = [];
+        let data = [];
+        response.Transactions.map((el) => {
+          label.push(getFullYear(el.date));
+          data.push(el.amount);
+        });
+        let dataSets = {
+          label: "Budget Utilization",
+          data: data,
+          fill: true,
+          backgroundColor: "rgb(255, 99, 132)",
+          borderColor: "rgba(255, 99, 132, 0.2)",
+        };
+        setLineLabel(label);
+        setLineData(dataSets);
+      })
+      .catch((err) => console.log(err))
+      .finally(() => {
+        dispatch(loadingToggle(false));
+      });
+  }, []);
+
+  const showModal = (transactionId) => {
+    if (typeof transactionId === "number") {
+      setTransactionId(transactionId);
+      dispatch(toggleModalFormDetail(true));
+    } else {
+      setTransactionId(null);
+      dispatch(toggleModalFormDetail(true));
+    }
   };
-  const showImageModal = () => {
+
+  const showImageModal = (url) => {
+    dispatch(addModalImageUrl(url));
     dispatch(toggleModalImage(true));
   };
+
+  const deleteHandler = (transactionId) => {
+    dispatch(deleteTransaction(transactionId)).then((response) => {
+      toast.success(response.message, {
+        position: "top-center",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    });
+  };
+
+  if (isLoading) {
+    return (
+      <lottie-player
+        src="https://assets2.lottiefiles.com/packages/lf20_YMim6w.json"
+        className="w-2/3 mx-auto h-2/3"
+        background="transparent"
+        speed="1"
+        loop
+        autoplay
+      ></lottie-player>
+    );
+  }
 
   return (
     <section className="text-gray-600 body-font">
       <div className="container px-5 py-24 mx-auto max-w-7x1">
+        {/* Line Chart */}
+        <div className="mb-5 border">
+          <LineChartTransaction
+            data={{ labels: lineLabel, datasets: [lineData] }}
+          />
+        </div>
+
+        {/* <pre>{JSON.stringify(lineLabel, null, 2)}</pre>
+        <pre>{JSON.stringify(lineData, null, 2)}</pre> */}
+        {/* <pre>{JSON.stringify(transactions, null, 2)}</pre> */}
+
         {/* Modal Add Transaction */}
-        <FormTransactionModal name="add" />
-        <InvoiceModal image="https://images.unsplash.com/photo-1628191137573-dee64e727614?ixid=MnwxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80" />
+        <FormTransactionModal id={transactionId} />
+        <InvoiceModal />
 
         {/* Table */}
         <div className="py-2 pr-10 -my-2 overflow-x-auto sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
           <div className="inline-block min-w-full px-8 pt-3 overflow-hidden align-middle bg-white rounded-bl-lg rounded-br-lg shadow shadow-dashboard">
-            <h1 className="mb-2 text-xl font-bold">Budget 1</h1>
+            <h1 className="mb-5 text-5xl font-bold">{transactions.name}</h1>
             <button
               className="px-5 py-2 mb-10 text-blue-500 transition duration-300 border border-blue-500 rounded hover:bg-blue-700 hover:text-white focus:outline-none"
               onClick={showModal}
@@ -55,74 +143,53 @@ export default function BudgetDetail() {
                 </tr>
               </thead>
               <tbody className="bg-white">
-                <tr>
-                  <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-500 ">
-                    <div className="text-sm leading-5 text-blue-900">
-                      Damilare Anjorin
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 text-sm leading-5 text-blue-900 whitespace-no-wrap border-b border-gray-500 ">
-                    16 september 2021
-                  </td>
-                  <td className="px-6 py-4 text-sm leading-5 text-blue-900 whitespace-no-wrap border-b border-gray-500 ">
-                    Rp. 200.000
-                  </td>
-                  <td className="px-6 py-4 text-sm leading-5 text-blue-900 whitespace-no-wrap border-b border-gray-500 ">
-                    transportasi
-                  </td>
-                  <td className="px-6 py-4 text-sm leading-5 text-blue-900 whitespace-no-wrap border-b border-gray-500 ">
-                    user 1
-                  </td>
-                  <td className="px-6 py-4 text-sm leading-5 text-blue-900 whitespace-no-wrap border-b border-gray-500 ">
-                    <button className="text-blue-500" onClick={showImageModal}>
-                      see invoice
-                    </button>
-                  </td>
-                  <td className="px-6 py-4 text-sm leading-5 text-right whitespace-no-wrap border-b border-gray-500 ">
-                    <div className="flex justify-between w-40">
-                      <button className="px-5 py-2 text-blue-500 transition duration-300 border border-blue-500 rounded hover:bg-blue-700 hover:text-white focus:outline-none">
-                        Edit
-                      </button>
-                      <button className="px-5 py-2 text-blue-500 transition duration-300 border border-blue-500 rounded hover:bg-blue-700 hover:text-white focus:outline-none">
-                        Delete
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-                <tr>
-                  <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-500 ">
-                    <div className="text-sm leading-5 text-blue-900">
-                      Damilare Anjorin
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 text-sm leading-5 text-blue-900 whitespace-no-wrap border-b border-gray-500 ">
-                    16 september 2021
-                  </td>
-                  <td className="px-6 py-4 text-sm leading-5 text-blue-900 whitespace-no-wrap border-b border-gray-500 ">
-                    Rp. 200.000
-                  </td>
-                  <td className="px-6 py-4 text-sm leading-5 text-blue-900 whitespace-no-wrap border-b border-gray-500 ">
-                    alat kantor
-                  </td>
-                  <td className="px-6 py-4 text-sm leading-5 text-blue-900 whitespace-no-wrap border-b border-gray-500 ">
-                    user 2
-                  </td>
-                  <td className="px-6 py-4 text-sm leading-5 text-blue-900 whitespace-no-wrap border-b border-gray-500 ">
-                    <button className="text-blue-500" onClick={showImageModal}>
-                      see invoice
-                    </button>
-                  </td>
-                  <td className="px-6 py-4 text-sm leading-5 text-right whitespace-no-wrap border-b border-gray-500 ">
-                    <div className="flex justify-between w-40">
-                      <button className="px-5 py-2 text-blue-500 transition duration-300 border border-blue-500 rounded hover:bg-blue-700 hover:text-white focus:outline-none">
-                        Edit
-                      </button>
-                      <button className="px-5 py-2 text-blue-500 transition duration-300 border border-blue-500 rounded hover:bg-blue-700 hover:text-white focus:outline-none">
-                        Delete
-                      </button>
-                    </div>
-                  </td>
-                </tr>
+                {transactions.Transactions.map((transaction) => {
+                  return (
+                    <tr key={transaction.id}>
+                      <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-500 ">
+                        <div className="text-sm leading-5 text-blue-900">
+                          {transaction.name}
+                        </div>
+                      </td>
+                      <td className="px-6 py-4 text-sm leading-5 text-blue-900 whitespace-no-wrap border-b border-gray-500 ">
+                        {getDate(transaction.date)}
+                      </td>
+                      <td className="px-6 py-4 text-sm leading-5 text-blue-900 whitespace-no-wrap border-b border-gray-500 ">
+                        {idrCurrency(transaction.amount)}
+                      </td>
+                      <td className="px-6 py-4 text-sm leading-5 text-blue-900 whitespace-no-wrap border-b border-gray-500 ">
+                        {transaction.Category.name}
+                      </td>
+                      <td className="px-6 py-4 text-sm leading-5 text-blue-900 whitespace-no-wrap border-b border-gray-500 ">
+                        {transaction.User.username}
+                      </td>
+                      <td className="px-6 py-4 text-sm leading-5 text-blue-900 whitespace-no-wrap border-b border-gray-500 ">
+                        <button
+                          className="text-blue-500"
+                          onClick={() => showImageModal(transaction.invoice)}
+                        >
+                          see invoice
+                        </button>
+                      </td>
+                      <td className="px-6 py-4 text-sm leading-5 text-right whitespace-no-wrap border-b border-gray-500 ">
+                        <div className="flex justify-between w-40">
+                          <button
+                            className="px-5 py-2 text-blue-500 transition duration-300 border border-blue-500 rounded hover:bg-blue-700 hover:text-white focus:outline-none"
+                            onClick={() => showModal(transaction.id)}
+                          >
+                            Edit
+                          </button>
+                          <button
+                            className="px-5 py-2 text-blue-500 transition duration-300 border border-blue-500 rounded hover:bg-blue-700 hover:text-white focus:outline-none"
+                            onClick={() => deleteHandler(transaction.id)}
+                          >
+                            Delete
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </div>
