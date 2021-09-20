@@ -64,17 +64,19 @@ export default function BudgetDetail() {
   };
 
   const deleteHandler = (transactionId) => {
-    dispatch(deleteTransaction(transactionId)).then((response) => {
-      toast.success(response.message, {
-        position: "top-center",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      });
-    });
+    dispatch(deleteTransaction(transactionId))
+      .then((response) => {
+        toast.success(response.message, {
+          position: "top-center",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+      })
+      .catch((err) => console.log(err));
   };
 
   if (isLoading) {
