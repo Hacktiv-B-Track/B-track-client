@@ -108,7 +108,6 @@ export default function DashboardFinance() {
                         </div>
                     </div>
                     {/* Departemen Body */}
-                    
                 </div>
                 {/* /Departemen */}
 

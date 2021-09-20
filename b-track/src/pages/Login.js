@@ -13,6 +13,11 @@ export default function Login() {
 
     }
 
+    function handleOnClick(e) {
+        e.preventDefault()
+        history.push('/register')
+    }
+
     return(
         <>
             <div className="min-h-screen min-w-screen bg-green-600 items-center flex justify-center">
@@ -47,7 +52,7 @@ export default function Login() {
                                     className="bg-green-400 w-full mt-4 mb-4 p-3">
                                 Login
                             </button>
-                            <a href='' onClick={()=>history.push('/register')} >Not Registered?</a>
+                            <a href='' onClick={(e)=>handleOnClick(e)} >Not Registered?</a>
                         </form>
                     </div>
                 </div>

@@ -14,7 +14,7 @@ function App() {
   return (
     <div className="App">
       {/* <FormModal /> */}
-      {location.pathname !== "/login" && location.pathname !== "/register" && (
+      {currentPath !== "/login" && currentPath !== "/register" && (
         <NavBar />
       )}
       <Switch>
