@@ -5,19 +5,69 @@ import {
   toggleModalImage,
   fetchTransactions,
   addModalImageUrl,
+  loadingToggle,
 } from "../store/action";
+import LineChartTransaction from "../components/LineChartTransaction";
 import FormTransactionModal from "../components/FormTransactionModal";
 import InvoiceModal from "../components/InvoiceModal";
 import { idrCurrency } from "../helpers/currency";
-import { getDate } from "../helpers/getDate";
+import { getDate, getFullYear } from "../helpers/getDate";
 
 export default function BudgetDetail() {
   const dispatch = useDispatch();
   const transactions = useSelector((state) => state.transactions);
   const [transactionId, setTransactionId] = useState("");
+  const [lineLabel, setLineLabel] = useState([]);
+  const [lineData, setLineData] = useState([]);
+  const isLoading = useSelector((state) => state.isLoading);
+
+  // const data = {
+  //   labels: [
+  //     "Jan",
+  //     "Feb",
+  //     "Mar",
+  //     "Apr",
+  //     "May",
+  //     "Jun",
+  //     "Jul",
+  //     "Aug",
+  //     "Sep",
+  //     "Oct",
+  //     "Nov",
+  //     "Dec",
+  //   ],
+  //   datasets: [
+  //     {
+  //       label: "Budget Utilization",
+  //       data: [80, 92, 90, 85, 96, 87, 90, 98, 93, 88, 94, 99],
+  //       fill: true,
+  //       backgroundColor: "rgb(255, 99, 132)",
+  //       borderColor: "rgba(255, 99, 132, 0.2)",
+  //     },
+  //   ],
+  // };
 
   useEffect(() => {
-    dispatch(fetchTransactions());
+    dispatch(fetchTransactions())
+      .then((response) => {
+        let label = [];
+        let data = [];
+        response.map((el) => {
+          label.push(getFullYear(el.Date));
+          data.push(el.amount);
+        });
+        let dataSets = {
+          label: "Budget Utilization",
+          data: data,
+          fill: true,
+          backgroundColor: "rgb(255, 99, 132)",
+          borderColor: "rgba(255, 99, 132, 0.2)",
+        };
+        setLineLabel(label);
+        setLineData(dataSets);
+        dispatch(loadingToggle(false));
+      })
+      .catch((err) => console.log(err));
   }, []);
 
   const showModal = (transactionId) => {
@@ -35,14 +85,34 @@ export default function BudgetDetail() {
     dispatch(toggleModalImage(true));
   };
 
-  //TODO Edit functionality
+  if (isLoading) {
+    return (
+      <lottie-player
+        src="https://assets2.lottiefiles.com/packages/lf20_YMim6w.json"
+        className="w-2/3 mx-auto h-2/3"
+        background="transparent"
+        speed="1"
+        loop
+        autoplay
+      ></lottie-player>
+    );
+  }
 
   return (
     <section className="text-gray-600 body-font">
       <div className="container px-5 py-24 mx-auto max-w-7x1">
+        {/* Line Chart */}
+        <div className="mb-5 border">
+          <LineChartTransaction
+            data={{ labels: lineLabel, datasets: [lineData] }}
+          />
+        </div>
+        {/* <pre>{JSON.stringify(lineLabel, null, 2)}</pre>
+        <pre>{JSON.stringify(lineData, null, 2)}</pre>
+        <pre>{JSON.stringify(transactions, null, 2)}</pre> */}
+
         {/* Modal Add Transaction */}
         <FormTransactionModal id={transactionId} />
-        <pre>{JSON.stringify(transactions, null, 2)}</pre>
         <InvoiceModal />
 
         {/* Table */}
