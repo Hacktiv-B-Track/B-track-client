@@ -107,8 +107,12 @@ export const fetchTransaction = (id) => {
   return async (dispatch, getState) => {
     try {
       if (id) {
-        const response = await axios.get(`/${id}`);
-        const transaction = response.data;
+        const { data } = await axios({
+          method: "GET",
+          url: `/transactions/${id}`,
+          headers: { access_token: localStorage.getItem("access_token") },
+        });
+        const transaction = data;
         dispatch(addTransaction(transaction));
         return Promise.resolve(transaction);
       }
@@ -118,18 +122,73 @@ export const fetchTransaction = (id) => {
   };
 };
 
-export const postTransaction = (payload) => {
+export const postTransaction = (payload, budgedId) => {
   return async (dispatch, getState) => {
     try {
+      console.log(budgedId);
       const { data } = await axios({
         method: "POST",
-        url: `/transactions/1`,
+        url: `/transactions/${budgedId}`,
+        headers: { access_token: localStorage.getItem("access_token") },
         data: payload,
       });
       // return Promise.resolve(data);
       // dispatch(fetchTransactions());
+      toast.success("Success adding transaction", {
+        position: "top-center",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
     } catch (error) {
-      console.log(error);
+      toast.error(error.response.data.message, {
+        position: "top-center",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    }
+  };
+};
+
+export const editTransaction = (payload, budgedId) => {
+  return async (dispatch, getState) => {
+    try {
+      console.log(budgedId);
+      const { data } = await axios({
+        method: "PUT",
+        url: `/transactions/${budgedId}`,
+        headers: { access_token: localStorage.getItem("access_token") },
+        data: payload,
+      });
+      console.log(data);
+      // return Promise.resolve(data);
+      // dispatch(fetchTransactions());
+      toast.success("Success adding transaction", {
+        position: "top-center",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    } catch (error) {
+      toast.error(error.response.data.message, {
+        position: "top-center",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
     }
   };
 };
@@ -137,7 +196,11 @@ export const postTransaction = (payload) => {
 export const deleteTransaction = (transactionId) => {
   return async (dispatch, getState) => {
     try {
-      const { data } = await axios.delete(`/transactions/${transactionId}`);
+      const { data } = await axios({
+        method: "DELETE",
+        url: `/transactions/${transactionId}`,
+        headers: { access_token: localStorage.getItem("access_token") },
+      });
       return Promise.resolve(data);
     } catch (error) {
       toast.error(error.response.data.message, {
