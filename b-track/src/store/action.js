@@ -4,6 +4,8 @@ import {
   TOGGLE_MODAL_IMAGE,
   ADD_TRANSACTIONS,
   ADD_MODAL_IMAGE_URL,
+  ADD_TRANSACTION,
+  LOADING_TOGGLE,
 } from "./actionType";
 
 export function toggleModalFormDetail(payload) {
@@ -34,6 +36,13 @@ export function addTransactions(payload) {
   };
 }
 
+export function addTransaction(payload) {
+  return {
+    type: ADD_TRANSACTION,
+    payload: payload,
+  };
+}
+
 export const fetchTransactions = () => {
   return async (dispatch, getState) => {
     try {
@@ -45,3 +54,26 @@ export const fetchTransactions = () => {
     }
   };
 };
+
+export const fetchTransaction = (id) => {
+  return async (dispatch, getState) => {
+    // const { transaction } = getState();
+    try {
+      if (id) {
+        const response = await axios.get(`/${id}`);
+        const transaction = response.data;
+        dispatch(addTransaction(transaction));
+        return Promise.resolve(transaction);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+};
+
+export function loadingToggle(payload) {
+  return {
+    type: LOADING_TOGGLE,
+    payload: payload,
+  };
+}

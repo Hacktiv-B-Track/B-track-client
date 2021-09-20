@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
   toggleModalFormDetail,
@@ -13,24 +13,37 @@ import { idrCurrency } from "../helpers/currency";
 export default function BudgetDetail() {
   const dispatch = useDispatch();
   const transactions = useSelector((state) => state.transactions);
+  const [transactionId, setTransactionId] = useState("");
+  const [tes, setTes] = useState("");
 
   useEffect(() => {
     dispatch(fetchTransactions());
   }, []);
 
-  const showModal = () => {
-    dispatch(toggleModalFormDetail(true));
+  const showModal = (transactionId) => {
+    if (typeof transactionId === "number") {
+      setTes("edit");
+      setTransactionId(transactionId);
+      dispatch(toggleModalFormDetail(true));
+    } else {
+      setTes("add");
+      setTransactionId(null);
+      dispatch(toggleModalFormDetail(true));
+    }
   };
+
   const showImageModal = (url) => {
     dispatch(addModalImageUrl(url));
     dispatch(toggleModalImage(true));
   };
 
+  //TODO Edit functionality
+
   return (
     <section className="text-gray-600 body-font">
       <div className="container px-5 py-24 mx-auto max-w-7x1">
         {/* Modal Add Transaction */}
-        <FormTransactionModal name="add" />
+        <FormTransactionModal id={transactionId} name={tes} />
         <pre>{JSON.stringify(transactions, null, 2)}</pre>
         <InvoiceModal />
 
@@ -99,7 +112,10 @@ export default function BudgetDetail() {
                       </td>
                       <td className="px-6 py-4 text-sm leading-5 text-right whitespace-no-wrap border-b border-gray-500 ">
                         <div className="flex justify-between w-40">
-                          <button className="px-5 py-2 text-blue-500 transition duration-300 border border-blue-500 rounded hover:bg-blue-700 hover:text-white focus:outline-none">
+                          <button
+                            className="px-5 py-2 text-blue-500 transition duration-300 border border-blue-500 rounded hover:bg-blue-700 hover:text-white focus:outline-none"
+                            onClick={() => showModal(transaction.id)}
+                          >
                             Edit
                           </button>
                           <button className="px-5 py-2 text-blue-500 transition duration-300 border border-blue-500 rounded hover:bg-blue-700 hover:text-white focus:outline-none">
