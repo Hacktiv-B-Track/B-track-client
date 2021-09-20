@@ -15,6 +15,11 @@ export default function Register() {
 
     }
 
+    function handleOnClick(e) {
+        e.preventDefault()
+        history.push('/login')
+    }
+
     return(
         <>
             <div className="min-h-screen min-w-screen bg-green-600 items-center flex justify-center">
@@ -59,6 +64,9 @@ export default function Register() {
                             onChange={e=>setRole(e.target.value)} 
                             id="role"
                             >
+                                <option value="" selected disabled hidden>
+                                    --SELECT CATEGORY--
+                                </option>
                                 <option value="Staff">Staff</option>
                                 <option value="Manager">Manager</option>
                             </select>
@@ -67,7 +75,7 @@ export default function Register() {
                                     className="bg-green-400 w-full mt-4 mb-4 p-3">
                                 Register
                             </button>
-                            <a href='' onClick={()=>history.push('/login')} >Back to Login</a>
+                            <a href='' onClick={(e)=>handleOnClick(e)} >Back to Login</a>
                         </form>
                     </div>
                 </div>
