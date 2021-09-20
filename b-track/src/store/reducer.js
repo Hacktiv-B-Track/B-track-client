@@ -1,8 +1,19 @@
-import { TOGGLE_MODAL_FORM_DETAIL, TOGGLE_MODAL_IMAGE } from "./actionType";
+import {
+  TOGGLE_MODAL_FORM_DETAIL,
+  TOGGLE_MODAL_IMAGE,
+  ADD_MODAL_IMAGE_URL,
+  ADD_TRANSACTIONS,
+  ADD_TRANSACTION,
+  LOADING_TOGGLE,
+} from "./actionType";
 
 const initialState = {
   isModalFormDetail: false,
   isModalImage: false,
+  modalImageUrl: "",
+  transactions: [],
+  transaction: {},
+  isLoading: true,
 };
 
 export default function reducer(state = initialState, action) {
@@ -16,6 +27,26 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         isModalImage: action.payload,
+      };
+    case ADD_MODAL_IMAGE_URL:
+      return {
+        ...state,
+        modalImageUrl: action.payload,
+      };
+    case ADD_TRANSACTIONS:
+      return {
+        ...state,
+        transactions: action.payload,
+      };
+    case ADD_TRANSACTION:
+      return {
+        ...state,
+        transaction: action.payload,
+      };
+    case LOADING_TOGGLE:
+      return {
+        ...state,
+        isLoading: action.payload,
       };
     default:
       return state;
