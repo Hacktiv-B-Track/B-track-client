@@ -1,10 +1,15 @@
 import Modal from "react-modal";
 import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { toggleModalFormDetail, fetchTransaction } from "../store/action";
+import {
+  toggleModalFormDetail,
+  fetchTransaction,
+  fetchScanInvoice,
+  postTransaction,
+} from "../store/action";
 import { idrCurrency } from "../helpers/currency";
 
-//TODO Chart & wiring
+//TODO Refetch after add
 
 const customStyles = {
   content: {
@@ -26,6 +31,8 @@ export default function FormTransactionModal(props) {
   const [file, setFile] = useState(null);
   const [date, setDate] = useState("");
   const [category, setCategory] = useState("");
+  const [imageUrl, setImageUrl] = useState("");
+  const [loading, setLoading] = useState(false);
 
   useEffect(async () => {
     if (props.id) {
@@ -39,11 +46,6 @@ export default function FormTransactionModal(props) {
           setCategory(res.category);
         })
         .catch((err) => console.log(err));
-      // setPrice(transaction.amount);
-      // setName(transaction.name);
-      // setFile(transaction.invoice);
-      // setDate(transaction.Date);
-      // setCategory(transaction.category);
     }
   }, [props.id]);
 
@@ -56,26 +58,57 @@ export default function FormTransactionModal(props) {
     setNamePrice(idrCurrency(priceValue));
   };
 
+  const scanFile = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const formData = new FormData();
+    formData.append("invoice-file", file);
+    setLoading(true);
+    dispatch(fetchScanInvoice(formData))
+      .then((res) => {
+        setPrice(res.totalInvoice);
+        setNamePrice(idrCurrency(res.totalInvoice));
+        setImageUrl(res.invoiceUrl);
+        setLoading(false);
+      })
+      .catch((err) => console.log(err));
+  };
+
   const submitHandler = (e) => {
     e.preventDefault();
-    // console.log(price);
-    // console.log(name);
-    console.log(file);
-    // console.log(date);
-    // console.log(category);
+    const newDate = new Date(date).toISOString();
+    let data = {
+      name,
+      date: newDate,
+      amount: price,
+      CategoryId: category,
+      // invoice: imageUrl,
+      //! testing add, biar irit OCR
+      invoice:
+        "https://ik.imagekit.io/ddtyiwgu4rm/invoice-kledo-1_pHFD1g4Hv.jpg",
+    };
+
+    dispatch(postTransaction(data));
 
     //TODO
     //* add edit pake props
     //* get budgetId from routeParam
     //* get userName from budgetDetail
     //* get access token for header
-
-    // const formData = new FormData();
-    //! formData.append("invoice-file", file); -> pasang pas hit button scan file
-    // header: access token
-    // body: name, amount, date, invoice, category(selectoption), budgetId(routeparams), userName(getDateBudget)
-    // axios.post("api/uploadfile", formData);
   };
+
+  // if (isLoading) {
+  //   return (
+  //     <lottie-player
+  //       src="https://assets2.lottiefiles.com/packages/lf20_YMim6w.json"
+  //       className="w-2/3 mx-auto h-2/3"
+  //       background="transparent"
+  //       speed="1"
+  //       loop
+  //       autoplay
+  //     ></lottie-player>
+  //   );
+  // }
 
   return (
     <>
@@ -88,6 +121,32 @@ export default function FormTransactionModal(props) {
         ariaHideApp={false}
       >
         <div className="w-96 h-96">
+          {/* <div className="flex-row w-full text-xs md:flex md:space-x-4">
+            <div className="w-full mb-3 space-y-2 text-xs">
+              <label className="py-2 font-semibold text-gray-600 ">
+                Invoice
+              </label>
+              <div className="relative flex flex-wrap items-stretch w-full mb-4">
+                <input
+                  type="file"
+                  onChange={(e) => setFile(e.target.files[0])}
+                />
+              </div>
+            </div>
+
+            <div className="w-full mb-3 space-y-2 text-xs">
+              <label className="py-2 font-semibold text-gray-600 ">OCR</label>
+              <div className="relative flex flex-wrap items-stretch w-full mb-4">
+                <button
+                  className="px-5 py-2 mb-2 text-sm font-medium tracking-wider text-gray-600 bg-white border rounded-full shadow-sm md:mb-0 hover:shadow-lg hover:bg-gray-100"
+                  onClick={(e) => scanFile(e)}
+                >
+                  Scan File
+                </button>
+              </div>
+            </div>
+          </div> */}
+
           <form className="mt-5" onSubmit={(e) => submitHandler(e)}>
             <div className="w-full mb-3 space-y-2 text-xs">
               <div className="w-full mb-3 space-y-2 text-xs">
@@ -157,16 +216,41 @@ export default function FormTransactionModal(props) {
               </div>
             </div>
 
-            <div className="w-full mb-3 space-y-2 text-xs">
-              <label className="py-2 font-semibold text-gray-600 ">
-                Invoice
-              </label>
-              <div className="relative flex flex-wrap items-stretch w-full mb-4">
-                <input
-                  type="file"
-                  onChange={(e) => setFile(e.target.files[0])}
-                />
+            {/* Scan OCR */}
+            <form>
+              <div className="flex-row w-full text-xs md:flex md:space-x-4">
+                <div className="w-full mb-3 space-y-2 text-xs">
+                  <label className="py-2 font-semibold text-gray-600 ">
+                    Invoice
+                  </label>
+                  <div className="relative flex flex-wrap items-stretch w-full mb-4">
+                    <input
+                      type="file"
+                      onChange={(e) => setFile(e.target.files[0])}
+                    />
+                  </div>
+                </div>
+
+                <div className="w-full mb-3 space-y-2 text-xs">
+                  <label className="py-2 font-semibold text-gray-600 ">
+                    OCR
+                  </label>
+                  <div className="relative flex flex-wrap items-stretch w-full mb-4">
+                    <button
+                      className="px-5 py-2 mb-2 text-sm font-medium tracking-wider text-gray-600 bg-white border rounded-full shadow-sm md:mb-0 hover:shadow-lg hover:bg-gray-100"
+                      onClick={(e) => scanFile(e)}
+                    >
+                      Scan File
+                    </button>
+                  </div>
+                  {loading && <p>Please wait</p>}
+                </div>
               </div>
+            </form>
+
+            {/* Image */}
+            <div className="w-full mb-3 space-y-2 text-xs">
+              <img src={imageUrl} alt="invoice" />
             </div>
 
             <div className="flex flex-col-reverse mt-5 text-right md:space-x-3 md:block">

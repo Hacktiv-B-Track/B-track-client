@@ -5,15 +5,17 @@ import {
   ADD_TRANSACTIONS,
   ADD_TRANSACTION,
   LOADING_TOGGLE,
+  SCAN_INVOICE,
 } from "./actionType";
 
 const initialState = {
   isModalFormDetail: false,
   isModalImage: false,
   modalImageUrl: "",
-  transactions: [],
+  transactions: {},
   transaction: {},
   isLoading: true,
+  dataScan: {},
 };
 
 export default function reducer(state = initialState, action) {
@@ -47,6 +49,11 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         isLoading: action.payload,
+      };
+    case SCAN_INVOICE:
+      return {
+        ...state,
+        dataScan: action.payload,
       };
     default:
       return state;

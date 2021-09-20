@@ -1,10 +1,12 @@
 import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import { toast } from "react-toastify";
 import {
   toggleModalFormDetail,
   toggleModalImage,
   fetchTransactions,
   addModalImageUrl,
+  deleteTransaction,
   loadingToggle,
 } from "../store/action";
 import LineChartTransaction from "../components/LineChartTransaction";
@@ -21,39 +23,13 @@ export default function BudgetDetail() {
   const [lineData, setLineData] = useState([]);
   const isLoading = useSelector((state) => state.isLoading);
 
-  // const data = {
-  //   labels: [
-  //     "Jan",
-  //     "Feb",
-  //     "Mar",
-  //     "Apr",
-  //     "May",
-  //     "Jun",
-  //     "Jul",
-  //     "Aug",
-  //     "Sep",
-  //     "Oct",
-  //     "Nov",
-  //     "Dec",
-  //   ],
-  //   datasets: [
-  //     {
-  //       label: "Budget Utilization",
-  //       data: [80, 92, 90, 85, 96, 87, 90, 98, 93, 88, 94, 99],
-  //       fill: true,
-  //       backgroundColor: "rgb(255, 99, 132)",
-  //       borderColor: "rgba(255, 99, 132, 0.2)",
-  //     },
-  //   ],
-  // };
-
   useEffect(() => {
     dispatch(fetchTransactions())
       .then((response) => {
         let label = [];
         let data = [];
-        response.map((el) => {
-          label.push(getFullYear(el.Date));
+        response.Transactions.map((el) => {
+          label.push(getFullYear(el.date));
           data.push(el.amount);
         });
         let dataSets = {
@@ -65,9 +41,11 @@ export default function BudgetDetail() {
         };
         setLineLabel(label);
         setLineData(dataSets);
-        dispatch(loadingToggle(false));
       })
-      .catch((err) => console.log(err));
+      .catch((err) => console.log(err))
+      .finally(() => {
+        dispatch(loadingToggle(false));
+      });
   }, []);
 
   const showModal = (transactionId) => {
@@ -83,6 +61,20 @@ export default function BudgetDetail() {
   const showImageModal = (url) => {
     dispatch(addModalImageUrl(url));
     dispatch(toggleModalImage(true));
+  };
+
+  const deleteHandler = (transactionId) => {
+    dispatch(deleteTransaction(transactionId)).then((response) => {
+      toast.success(response.message, {
+        position: "top-center",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    });
   };
 
   if (isLoading) {
@@ -107,9 +99,10 @@ export default function BudgetDetail() {
             data={{ labels: lineLabel, datasets: [lineData] }}
           />
         </div>
+
         {/* <pre>{JSON.stringify(lineLabel, null, 2)}</pre>
-        <pre>{JSON.stringify(lineData, null, 2)}</pre>
-        <pre>{JSON.stringify(transactions, null, 2)}</pre> */}
+        <pre>{JSON.stringify(lineData, null, 2)}</pre> */}
+        {/* <pre>{JSON.stringify(transactions, null, 2)}</pre> */}
 
         {/* Modal Add Transaction */}
         <FormTransactionModal id={transactionId} />
@@ -118,7 +111,7 @@ export default function BudgetDetail() {
         {/* Table */}
         <div className="py-2 pr-10 -my-2 overflow-x-auto sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
           <div className="inline-block min-w-full px-8 pt-3 overflow-hidden align-middle bg-white rounded-bl-lg rounded-br-lg shadow shadow-dashboard">
-            <h1 className="mb-2 text-xl font-bold">Budget 1</h1>
+            <h1 className="mb-5 text-5xl font-bold">{transactions.name}</h1>
             <button
               className="px-5 py-2 mb-10 text-blue-500 transition duration-300 border border-blue-500 rounded hover:bg-blue-700 hover:text-white focus:outline-none"
               onClick={showModal}
@@ -150,7 +143,7 @@ export default function BudgetDetail() {
                 </tr>
               </thead>
               <tbody className="bg-white">
-                {transactions.map((transaction) => {
+                {transactions.Transactions.map((transaction) => {
                   return (
                     <tr key={transaction.id}>
                       <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-500 ">
@@ -159,16 +152,16 @@ export default function BudgetDetail() {
                         </div>
                       </td>
                       <td className="px-6 py-4 text-sm leading-5 text-blue-900 whitespace-no-wrap border-b border-gray-500 ">
-                        {getDate(transaction.Date)}
+                        {getDate(transaction.date)}
                       </td>
                       <td className="px-6 py-4 text-sm leading-5 text-blue-900 whitespace-no-wrap border-b border-gray-500 ">
                         {idrCurrency(transaction.amount)}
                       </td>
                       <td className="px-6 py-4 text-sm leading-5 text-blue-900 whitespace-no-wrap border-b border-gray-500 ">
-                        {transaction.category}
+                        {transaction.Category.name}
                       </td>
                       <td className="px-6 py-4 text-sm leading-5 text-blue-900 whitespace-no-wrap border-b border-gray-500 ">
-                        {transaction.by}
+                        {transaction.User.username}
                       </td>
                       <td className="px-6 py-4 text-sm leading-5 text-blue-900 whitespace-no-wrap border-b border-gray-500 ">
                         <button
@@ -186,7 +179,10 @@ export default function BudgetDetail() {
                           >
                             Edit
                           </button>
-                          <button className="px-5 py-2 text-blue-500 transition duration-300 border border-blue-500 rounded hover:bg-blue-700 hover:text-white focus:outline-none">
+                          <button
+                            className="px-5 py-2 text-blue-500 transition duration-300 border border-blue-500 rounded hover:bg-blue-700 hover:text-white focus:outline-none"
+                            onClick={() => deleteHandler(transaction.id)}
+                          >
                             Delete
                           </button>
                         </div>
