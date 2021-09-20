@@ -6,7 +6,9 @@ import {
   ADD_MODAL_IMAGE_URL,
   ADD_TRANSACTION,
   LOADING_TOGGLE,
+  SCAN_INVOICE,
 } from "./actionType";
+import { toast } from "react-toastify";
 
 export function toggleModalFormDetail(payload) {
   return {
@@ -47,8 +49,8 @@ export const fetchTransactions = () => {
   return async (dispatch, getState) => {
     try {
       dispatch(loadingToggle(true));
-      const response = await axios.get(`/`);
-      const transactions = response.data;
+      const { data } = await axios.get(`/budgets/1`);
+      const transactions = data;
       dispatch(addTransactions(transactions));
       return Promise.resolve(transactions);
     } catch (error) {
@@ -59,7 +61,6 @@ export const fetchTransactions = () => {
 
 export const fetchTransaction = (id) => {
   return async (dispatch, getState) => {
-    // const { transaction } = getState();
     try {
       if (id) {
         const response = await axios.get(`/${id}`);
@@ -73,9 +74,67 @@ export const fetchTransaction = (id) => {
   };
 };
 
+export const postTransaction = (payload) => {
+  return async (dispatch, getState) => {
+    try {
+      const { data } = await axios({
+        method: "POST",
+        url: `/transactions/1`,
+        data: payload,
+      });
+      // return Promise.resolve(data);
+      // dispatch(fetchTransactions());
+    } catch (error) {
+      console.error(error);
+    }
+  };
+};
+
+export const deleteTransaction = (transactionId) => {
+  return async (dispatch, getState) => {
+    try {
+      const { data } = await axios.delete(`/transactions/${transactionId}`);
+      return Promise.resolve(data);
+    } catch (error) {
+      toast.error(error.response.data.message, {
+        position: "top-center",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    }
+  };
+};
+
+export const fetchScanInvoice = (file) => {
+  return async (dispatch, getState) => {
+    try {
+      // dispatch(loadingToggle(true));
+      const { data } = await axios({
+        method: "POST",
+        url: `/scanInvoice`,
+        headers: { "Content-Type": "multipart/form-data" },
+        data: file,
+      });
+      return Promise.resolve(data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+};
+
 export function loadingToggle(payload) {
   return {
     type: LOADING_TOGGLE,
+    payload: payload,
+  };
+}
+export function scanInvoice(payload) {
+  return {
+    type: SCAN_INVOICE,
     payload: payload,
   };
 }
