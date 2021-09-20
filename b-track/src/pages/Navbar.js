@@ -1,7 +1,10 @@
 import React from "react";
+import { useState } from "react";
 import logo from "../assets/images/logo.png";
 
 export default function Navbar() {
+  const [username, setUsername] = useState(localStorage.getItem('username'))
+
   return (
     <nav className="flex flex-col content-center w-full px-6 py-2 font-sans text-center bg-white shadow sm:flex-row sm:text-left sm:justify-between sm:items-baseline">
       <div className="flex-none self-center hidden lg:flex">

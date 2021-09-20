@@ -1,4 +1,15 @@
+import { useState } from "react"
+import { useHistory } from "react-router"
+
 export default function NavBar() {
+  const [username] = useState(localStorage.getItem('username'))
+  let history = useHistory()
+
+  function handleLogout() {
+      localStorage.clear()
+      history.push('/login')
+  }
+
     return (
         <>
             <div className="navbar mb-2 shadow-lg bg-neutral text-neutral-content rounded-box">
@@ -15,10 +26,20 @@ export default function NavBar() {
                         </span>
                 </div> 
                 <div className="flex-none">
-                    <div className="avatar">
-                    <div className="rounded-full w-10 h-10 m-1">
-                        <img src="https://i.pravatar.cc/500?img=32" alt=''/>
-                    </div>
+                    <div class="dropdown dropdown-end">
+                        <div tabindex="0" class="m-1 btn">
+                            <p className="text-lg font-bold mx-2">{username}</p>
+                            <div className="avatar">
+                                <div className="rounded-full w-10 h-10 m-1">
+                                    <img src="https://i.pravatar.cc/500?img=32" alt=''/>
+                                </div>
+                            </div>
+                        </div> 
+                        <ul tabindex="0" class="p-2 shadow menu dropdown-content bg-base-100 rounded-box w-52">
+                            <li className="text-black">
+                                <a onClick={e=>handleLogout()}>Logout</a>
+                            </li> 
+                        </ul>
                     </div>
                 </div>
             </div>

@@ -1,5 +1,5 @@
 import "./App.css";
-import { Switch, Route, useLocation } from "react-router-dom";
+import { Switch, Route, Redirect, useLocation } from "react-router-dom";
 import NavBar from "./components/NavBar";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
@@ -7,57 +7,54 @@ import Register from "./pages/Register";
 import DashboardDepartment from "./pages/DashboardDepartment";
 import BudgetDetail from "./pages/BudgetDetail";
 import DashboardFinance from "./pages/DashboardFinance";
+import { useState } from "react";
 import { useEffect } from "react";
-import { useDispatch } from "react-redux";
-import { fetchCategories } from "./store/action";
 
 function App() {
   const location = useLocation();
   const currentPath = location.pathname;
-  const dispatch = useDispatch()
+  const [isAuthenticated, setIsAuthenticated] = useState(localStorage.getItem('access_token'))
+  const [DepartmentId, setDepartmentId] = useState(localStorage.getItem('DepartmentId'))
 
   useEffect(() => {
-    dispatch(fetchCategories())
-  }, [])
+    setIsAuthenticated(localStorage.getItem('access_token'))
+    setDepartmentId(localStorage.getItem('DepartmentId'))
+  }, [currentPath])
+
+  let routes
+  if (isAuthenticated) {
+    routes = (
+    <Switch>
+      <Route path="/users" component={Users} />
+      <Route exact path="/dashboard/finance" component={DashboardFinance} />
+      <Route
+        path="/dashboard/:departmentId"
+        component={DashboardDepartment}
+      />
+      <Route path="/budget/:budgetId" component={BudgetDetail} />
+      <Redirect to={`dashboard/${DepartmentId}`}></Redirect>
+      
+    </Switch>)
+  } else {
+    routes = (
+      <Switch>
+        <Route path="/login" component={Login} />
+        <Route path="/register" component={Register} />
+        <Redirect to='/login'></Redirect>
+      </Switch>
+    )
+  }
 
   return (
     <div className="App">
-      {/* <FormModal /> */}
       {currentPath !== "/login" && currentPath !== "/register" && (
         <NavBar />
       )}
-      <Switch>
-        {/* <Route exact path="/" component={} /> */}
-        <Route path="/login" component={Login} />
-        <Route path="/register" component={Register} />
-        <Route path="/users" component={Users} />
-        <Route exact path="/dashboard/finance" component={DashboardFinance} />
-        <Route
-          path="/dashboard/:departmentId"
-          component={DashboardDepartment}
-        />
-        <Route path="/budget/:budgetId" component={BudgetDetail} />
-      </Switch>
-
-      {/* <nav>
-            <ul>
-              <li>
-                <Link to="/login">Login</Link>
-              </li>
-              <li>
-                <Link to="/dashboard/:departmentId">Dashboard Department</Link>
-              </li>
-              <li>
-                <Link to="/budget/:budgetId">About</Link>
-              </li>
-              <li>
-                <Link to="/users">Users</Link>
-              </li>
-            </ul>
-          </nav> */}
+      {routes}
     </div>
   );
 }
+
 
 function Users() {
   return <h2>Users</h2>;

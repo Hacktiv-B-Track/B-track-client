@@ -1,10 +1,20 @@
-import { useDispatch } from "react-redux";
-import { toggleModalFormDetail, toggleModalImage } from "../store/action";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchBudgetDetail, toggleModalFormDetail, toggleModalImage } from "../store/action";
 import FormTransactionModal from "../components/FormTransactionModal";
 import InvoiceModal from "../components/InvoiceModal";
+import { useEffect, useState } from "react";
+import { useParams } from 'react-router-dom'
 
 export default function BudgetDetail() {
+  const [access_token] = useState(localStorage.getItem('access_token'))
+  const budgetDetail = useSelector(state => state.budgetDetail)
   const dispatch = useDispatch();
+  let { budgetId } = useParams();
+  console.log(budgetDetail);
+
+  useEffect(() => {
+    dispatch(fetchBudgetDetail({access_token, budgetId}))
+  }, [])
 
   const showModal = () => {
     dispatch(toggleModalFormDetail(true));
@@ -23,7 +33,7 @@ export default function BudgetDetail() {
         {/* Table */}
         <div className="py-2 pr-10 -my-2 overflow-x-auto sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
           <div className="inline-block min-w-full px-8 pt-3 overflow-hidden align-middle bg-white rounded-bl-lg rounded-br-lg shadow shadow-dashboard">
-            <h1 className="mb-2 text-xl font-bold">Budget 1</h1>
+            <h1 className="mb-2 text-xl font-bold">{budgetDetail.name}</h1>
             <button
               className="px-5 py-2 mb-10 text-blue-500 transition duration-300 border border-blue-500 rounded hover:bg-blue-700 hover:text-white focus:outline-none"
               onClick={showModal}
@@ -55,74 +65,45 @@ export default function BudgetDetail() {
                 </tr>
               </thead>
               <tbody className="bg-white">
-                <tr>
-                  <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-500 ">
-                    <div className="text-sm leading-5 text-blue-900">
-                      Damilare Anjorin
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 text-sm leading-5 text-blue-900 whitespace-no-wrap border-b border-gray-500 ">
-                    16 september 2021
-                  </td>
-                  <td className="px-6 py-4 text-sm leading-5 text-blue-900 whitespace-no-wrap border-b border-gray-500 ">
-                    Rp. 200.000
-                  </td>
-                  <td className="px-6 py-4 text-sm leading-5 text-blue-900 whitespace-no-wrap border-b border-gray-500 ">
-                    transportasi
-                  </td>
-                  <td className="px-6 py-4 text-sm leading-5 text-blue-900 whitespace-no-wrap border-b border-gray-500 ">
-                    user 1
-                  </td>
-                  <td className="px-6 py-4 text-sm leading-5 text-blue-900 whitespace-no-wrap border-b border-gray-500 ">
-                    <button className="text-blue-500" onClick={showImageModal}>
-                      see invoice
-                    </button>
-                  </td>
-                  <td className="px-6 py-4 text-sm leading-5 text-right whitespace-no-wrap border-b border-gray-500 ">
-                    <div className="flex justify-between w-40">
-                      <button className="px-5 py-2 text-blue-500 transition duration-300 border border-blue-500 rounded hover:bg-blue-700 hover:text-white focus:outline-none">
-                        Edit
-                      </button>
-                      <button className="px-5 py-2 text-blue-500 transition duration-300 border border-blue-500 rounded hover:bg-blue-700 hover:text-white focus:outline-none">
-                        Delete
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-                <tr>
-                  <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-500 ">
-                    <div className="text-sm leading-5 text-blue-900">
-                      Damilare Anjorin
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 text-sm leading-5 text-blue-900 whitespace-no-wrap border-b border-gray-500 ">
-                    16 september 2021
-                  </td>
-                  <td className="px-6 py-4 text-sm leading-5 text-blue-900 whitespace-no-wrap border-b border-gray-500 ">
-                    Rp. 200.000
-                  </td>
-                  <td className="px-6 py-4 text-sm leading-5 text-blue-900 whitespace-no-wrap border-b border-gray-500 ">
-                    alat kantor
-                  </td>
-                  <td className="px-6 py-4 text-sm leading-5 text-blue-900 whitespace-no-wrap border-b border-gray-500 ">
-                    user 2
-                  </td>
-                  <td className="px-6 py-4 text-sm leading-5 text-blue-900 whitespace-no-wrap border-b border-gray-500 ">
-                    <button className="text-blue-500" onClick={showImageModal}>
-                      see invoice
-                    </button>
-                  </td>
-                  <td className="px-6 py-4 text-sm leading-5 text-right whitespace-no-wrap border-b border-gray-500 ">
-                    <div className="flex justify-between w-40">
-                      <button className="px-5 py-2 text-blue-500 transition duration-300 border border-blue-500 rounded hover:bg-blue-700 hover:text-white focus:outline-none">
-                        Edit
-                      </button>
-                      <button className="px-5 py-2 text-blue-500 transition duration-300 border border-blue-500 rounded hover:bg-blue-700 hover:text-white focus:outline-none">
-                        Delete
-                      </button>
-                    </div>
-                  </td>
-                </tr>
+                {budgetDetail?.Transactions?.map(transaction => {
+                  return (
+                    <tr>
+                      <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-500 ">
+                        <div className="text-sm leading-5 text-blue-900">
+                          {transaction.name}
+                        </div>
+                      </td>
+                      <td className="px-6 py-4 text-sm leading-5 text-blue-900 whitespace-no-wrap border-b border-gray-500 ">
+                        {transaction.date}
+                      </td>
+                      <td className="px-6 py-4 text-sm leading-5 text-blue-900 whitespace-no-wrap border-b border-gray-500 ">
+                        {transaction.amount}
+                      </td>
+                      <td className="px-6 py-4 text-sm leading-5 text-blue-900 whitespace-no-wrap border-b border-gray-500 ">
+                        {transaction.Category.name}
+                      </td>
+                      <td className="px-6 py-4 text-sm leading-5 text-blue-900 whitespace-no-wrap border-b border-gray-500 ">
+                        {transaction.User.username}
+                      </td>
+                      <td className="px-6 py-4 text-sm leading-5 text-blue-900 whitespace-no-wrap border-b border-gray-500 ">
+                        <button className="text-blue-500" onClick={showImageModal}>
+                          see invoice
+                        </button>
+                      </td>
+                      <td className="px-6 py-4 text-sm leading-5 text-right whitespace-no-wrap border-b border-gray-500 ">
+                        <div className="flex justify-between w-40">
+                          <button className="px-5 py-2 text-blue-500 transition duration-300 border border-blue-500 rounded hover:bg-blue-700 hover:text-white focus:outline-none">
+                            Edit
+                          </button>
+                          <button className="px-5 py-2 text-blue-500 transition duration-300 border border-blue-500 rounded hover:bg-blue-700 hover:text-white focus:outline-none">
+                            Delete
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  )
+                })}
+                
               </tbody>
             </table>
           </div>

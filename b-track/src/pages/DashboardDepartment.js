@@ -1,16 +1,32 @@
 import React from "react";
 import PieChart from "../components/PieChart";
-import { toggleModalFormDetail } from "../store/action";
-import { useDispatch } from "react-redux";
+import { fetchBudgets, toggleModalFormDetail } from "../store/action";
+import { useDispatch, useSelector } from "react-redux";
 import FormBudgetModal from "../components/FormBudgetModal";
 import InvoiceModal from "../components/InvoiceModal";
+import { useEffect } from "react";
+import { useState } from "react";
+import { useHistory } from "react-router";
 
 export default function DashboardDepartment() {
   const dispatch = useDispatch();
-
+  const [access_token] = useState(localStorage.getItem('access_token'))
+  const [DepartmentId] = useState(localStorage.getItem('DepartmentId'))
+  const [DepartmentName] = useState(localStorage.getItem('DepartmentName'))
+  const budgets = useSelector(state => state.budgets)
+  let history = useHistory()
+  
+  useEffect(() => {
+    dispatch(fetchBudgets({access_token, DepartmentId}))
+  }, [budgets])
+  
   const showModal = () => {
     dispatch(toggleModalFormDetail(true));
   };
+
+  function handleClick(budgetId) {
+    history.push('/budget/' + budgetId)
+  }
 
   return (
     <>
@@ -28,7 +44,7 @@ export default function DashboardDepartment() {
               <div className="flex flex-wrap w-full p-4 mb-4">
                 <div className="w-full mb-6 lg:mb-0">
                   <h1 className="mb-2 text-5xl font-bold text-gray-900 sm:text-4xl title-font">
-                    Department name
+                    {DepartmentName}
                   </h1>
                   <div className="w-20 h-1 bg-indigo-500 rounded"></div>
                 </div>
@@ -61,68 +77,23 @@ export default function DashboardDepartment() {
 
               {/* Departemen Body */}
               <div className='grid grid-cols-4 gap-4'>
-                        {/* Card Pie */}
-                        <div className="p-4 border">
-                            <div className="p-6 bg-white rounded-lg">
-                                <h2 className="mb-4 text-lg font-medium text-center text-gray-900">
-                                Budget 1
-                                </h2>
-                                <PieChart />
-                                <p className="mt-2 font-medium text-center">
-                                status: unapprove
-                                </p>
-                            </div>
-                        </div>
-                        {/* Card Pie */}
-                        <div className="p-4 border">
-                            <div className="p-6 bg-white rounded-lg">
-                                <h2 className="mb-4 text-lg font-medium text-center text-gray-900">
-                                Budget 2
-                                </h2>
-                                <PieChart />
-                                <p className="mt-2 font-medium text-center">
-                                status: unapprove
-                                </p>
-                            </div>
-                        </div>
-                        {/* Card Pie */}
-                        <div className="p-4 border">
-                            <div className="p-6 bg-white rounded-lg">
-                                <h2 className="mb-4 text-lg font-medium text-center text-gray-900">
-                                Budget 3
-                                </h2>
-                                <PieChart />
-                                <p className="mt-2 font-medium text-center">
-                                status: unapprove
-                                </p>
-                            </div>
-                        </div>
-                        {/* Card Pie */}
-                        <div className="p-4 border">
-                            <div className="p-6 bg-white rounded-lg">
-                                <h2 className="mb-4 text-lg font-medium text-center text-gray-900">
-                                Budget 4
-                                </h2>
-                                <PieChart />
-                                <p className="mt-2 font-medium text-center">
-                                status: unapprove
-                                </p>
-                            </div>
-                        </div>
-                        {/* Card Pie */}
-                        <div className="p-4 border">
-                            <div className="p-6 bg-white rounded-lg">
-                                <h2 className="mb-4 text-lg font-medium text-center text-gray-900">
-                                Budget 5
-                                </h2>
-                                <PieChart />
-                                <p className="mt-2 font-medium text-center">
-                                status: unapprove
-                                </p>
-                            </div>
+                {budgets.map(budget=>{
+                  return (
+                    <div onClick={e=>handleClick(budget.id)} key={budget.id} className="p-4 border-4 group hover:bg-white hover:shadow-lg hover:border-invisible cursor-pointer">
+                        <div className="p-6 bg-white rounded-lg">
+                            <h2 className="mb-4 text-lg font-medium text-center text-gray-900">
+                            {budget.name}
+                            </h2>
+                            <PieChart data={{amount:budget.amount, initial:budget.initial_amount}} />
+                            <p className="mt-2 font-medium text-center">
+                            status: {budget.status}
+                            </p>
                         </div>
                     </div>
-                    {/* Departemen Body */}
+                  )
+                })}
+              </div>
+              {/* Departemen Body */}
             
             </div>
           </section>

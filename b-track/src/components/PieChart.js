@@ -8,18 +8,18 @@ const options = {
   //! Tooltip & legend gak jalan
 };
 
-export default function PieChart() {
+export default function PieChart({data}) {
   return (
     <>
       <Pie
         data={{
-          labels: ["Red", "Blue"],
+          labels: ["Spent", "Remaining"],
           datasets: [
             {
-              data: [20, 80],
+              data: [data.initial - data.amount, data.amount],
               backgroundColor: [
-                "rgba(255, 99, 132, 0.2)",
-                "rgba(54, 162, 235, 0.2)",
+                "rgba(255,0,0,0.3)",
+                "rgba(0,0,255,0.3)",
               ],
             },
           ],
