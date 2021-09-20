@@ -8,6 +8,7 @@ import DashboardDepartment from "./pages/DashboardDepartment";
 import BudgetDetail from "./pages/BudgetDetail";
 import DashboardFinance from "./pages/DashboardFinance";
 import { useState } from "react";
+import BudgetDetailFinance from "./pages/BudgetDetailFinance";
 import { useEffect } from "react";
 
 function App() {
@@ -15,10 +16,12 @@ function App() {
   const currentPath = location.pathname;
   const [isAuthenticated, setIsAuthenticated] = useState(localStorage.getItem('access_token'))
   const [DepartmentId, setDepartmentId] = useState(localStorage.getItem('DepartmentId'))
+  const [DepartmentName, setDepartmentName] = useState(localStorage.getItem('DepartmentName'))
 
   useEffect(() => {
     setIsAuthenticated(localStorage.getItem('access_token'))
     setDepartmentId(localStorage.getItem('DepartmentId'))
+    setDepartmentName(localStorage.getItem('DepartmentName'))
   }, [currentPath])
 
   let routes
@@ -32,7 +35,7 @@ function App() {
         component={DashboardDepartment}
       />
       <Route path="/budget/:budgetId" component={BudgetDetail} />
-      <Redirect to={`dashboard/${DepartmentId}`}></Redirect>
+      {DepartmentName === 'Finance' ? (<Redirect to={`dashboard/finance`}></Redirect>) : (<Redirect to={`dashboard/${DepartmentId}`}></Redirect>)}
       
     </Switch>)
   } else {

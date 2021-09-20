@@ -10,15 +10,14 @@ import { useHistory } from "react-router";
 
 export default function DashboardDepartment() {
   const dispatch = useDispatch();
-  const [access_token] = useState(localStorage.getItem('access_token'))
   const [DepartmentId] = useState(localStorage.getItem('DepartmentId'))
   const [DepartmentName] = useState(localStorage.getItem('DepartmentName'))
   const budgets = useSelector(state => state.budgets)
   let history = useHistory()
   
   useEffect(() => {
-    dispatch(fetchBudgets({access_token, DepartmentId}))
-  }, [budgets])
+    dispatch(fetchBudgets({DepartmentId}))
+  }, [])
   
   const showModal = () => {
     dispatch(toggleModalFormDetail(true));
@@ -57,23 +56,6 @@ export default function DashboardDepartment() {
                 Request New Budget
               </button>
               {/* Departemen Head */}
-
-              {/* Departemen Body */}
-              {/* <div className="flex flex-wrap justify-center border"> */}
-                {/* Card Pie */}
-                {/* <div className="p-4 xl:w-1/3 md:w-1/2">
-                  <div className="p-6 bg-white rounded-lg">
-                    <h2 className="mb-4 text-lg font-medium text-center text-gray-900">
-                      Budget 1
-                    </h2>
-                    <PieChart />
-                    <p className="mt-2 font-medium text-center">
-                      status: unapprove
-                    </p>
-                  </div>
-                </div>
-              </div> */}
-              {/* Departemen Body */}
 
               {/* Departemen Body */}
               <div className='grid grid-cols-4 gap-4'>

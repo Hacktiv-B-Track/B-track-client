@@ -1,11 +1,30 @@
-import { SET_ERROR, SET_LOADING, TOGGLE_MODAL_FORM_DETAIL, TOGGLE_MODAL_IMAGE, FETCH_DEPARTMENTS, FETCH_BUDGETS, FETCH_BUDGET_DETAIL, ADD_BUDGET } from "./actionType";
+import {
+  TOGGLE_MODAL_FORM_DETAIL,
+  TOGGLE_MODAL_IMAGE,
+  ADD_MODAL_IMAGE_URL,
+  ADD_TRANSACTIONS,
+  ADD_TRANSACTION,
+  LOADING_TOGGLE,
+  SCAN_INVOICE,
+  SET_ERROR,
+  SET_LOADING,
+  FETCH_DEPARTMENTS,
+  FETCH_BUDGETS, 
+  FETCH_BUDGET_DETAIL, 
+  ADD_BUDGET
+} from "./actionType";
 
 const initialState = {
   isModalFormDetail: false,
   isModalImage: false,
-  loading:false,
-  error:null,
-  departments:[],
+  loading: false,
+  error: null,
+  departments: [],
+  modalImageUrl: "",
+  transactions: {},
+  transaction: {},
+  isLoading: true,
+  dataScan: {},
   budgets:[],
   budgetDetail:[]
 };
@@ -21,6 +40,31 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         isModalImage: action.payload,
+      };
+    case ADD_MODAL_IMAGE_URL:
+      return {
+        ...state,
+        modalImageUrl: action.payload,
+      };
+    case ADD_TRANSACTIONS:
+      return {
+        ...state,
+        transactions: action.payload,
+      };
+    case ADD_TRANSACTION:
+      return {
+        ...state,
+        transaction: action.payload,
+      };
+    case LOADING_TOGGLE:
+      return {
+        ...state,
+        isLoading: action.payload,
+      };
+    case SCAN_INVOICE:
+      return {
+        ...state,
+        dataScan: action.payload,
       };
     case SET_ERROR:
       return {

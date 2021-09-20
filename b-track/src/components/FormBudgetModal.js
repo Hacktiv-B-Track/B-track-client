@@ -43,7 +43,6 @@ export default function FormBudgetModal() {
     dispatch(requestBudget({
       name, amount:price, initial_amount:price, date, due_date:dueDate, access_token
     }))
-
   };
 
   return (
