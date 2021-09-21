@@ -236,7 +236,7 @@ export function requestBudget({
   };
 }
 
-export const fetchTransactions = ({ budgetId }) => {
+export const fetchTransactions = (budgetId) => {
   return async (dispatch, getState) => {
     try {
       dispatch(loadingToggle(true));
@@ -247,7 +247,8 @@ export const fetchTransactions = ({ budgetId }) => {
       });
       const transactions = data;
       dispatch(addTransactions(transactions));
-      return Promise.resolve(transactions);
+      dispatch(loadingToggle(false));
+      // return Promise.resolve(transactions);
     } catch (error) {
       console.log(error);
     }
@@ -276,15 +277,14 @@ export const fetchTransaction = (id) => {
 export const postTransaction = (payload, budgetId) => {
   return async (dispatch, getState) => {
     try {
-      console.log(budgetId);
       const { data } = await axios({
         method: "POST",
         url: `/transactions/${budgetId}`,
         headers: { access_token: localStorage.getItem("access_token") },
         data: payload,
       });
-      // return Promise.resolve(data);
-      // dispatch(fetchTransactions());
+      dispatch(fetchTransactions(budgetId));
+      dispatch(toggleModalFormDetail(false));
       toast.success("Success adding transaction", {
         position: "top-center",
         autoClose: 3000,
@@ -295,30 +295,32 @@ export const postTransaction = (payload, budgetId) => {
         progress: undefined,
       });
     } catch (error) {
-      toast.error(error.response.data.message, {
-        position: "top-center",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      });
+      error.response.data.message.map((err) =>
+        toast.error(err, {
+          position: "top-center",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        })
+      );
     }
   };
 };
 
-export const editTransaction = (payload, budgetId) => {
+export const editTransaction = (payload, transactionId, budgetId) => {
   return async (dispatch, getState) => {
     try {
       const { data } = await axios({
         method: "PUT",
-        url: `/transactions/${budgetId}`,
+        url: `/transactions/${transactionId}`,
         headers: { access_token: localStorage.getItem("access_token") },
         data: payload,
       });
-      // return Promise.resolve(data);
-      // dispatch(fetchTransactions());
+      dispatch(fetchTransactions(budgetId));
+      dispatch(toggleModalFormDetail(false));
       toast.success("Success adding transaction", {
         position: "top-center",
         autoClose: 3000,
@@ -329,20 +331,22 @@ export const editTransaction = (payload, budgetId) => {
         progress: undefined,
       });
     } catch (error) {
-      toast.error(error.response.data.message, {
-        position: "top-center",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      });
+      error.response.data.message.map((err) =>
+        toast.error(err, {
+          position: "top-center",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        })
+      );
     }
   };
 };
 
-export const deleteTransaction = (transactionId) => {
+export const deleteTransaction = (transactionId, budgetId) => {
   return async (dispatch, getState) => {
     try {
       const { data } = await axios({
@@ -350,6 +354,7 @@ export const deleteTransaction = (transactionId) => {
         url: `/transactions/${transactionId}`,
         headers: { access_token: localStorage.getItem("access_token") },
       });
+      dispatch(fetchTransactions(budgetId));
       return Promise.resolve(data);
     } catch (error) {
       toast.error(error.response.data.message, {
