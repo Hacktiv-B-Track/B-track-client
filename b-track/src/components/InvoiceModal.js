@@ -5,12 +5,18 @@ import { toggleModalImage } from "../store/action";
 
 const customStyles = {
   content: {
-    top: "50%",
-    left: "50%",
-    right: "auto",
-    bottom: "auto",
-    marginRight: "-50%",
-    transform: "translate(-50%, -50%)",
+    // top: "50%",
+    // left: "50%",
+    // right: "auto",
+    // bottom: "auto",
+    // marginRight: "-50%",
+    // transform: "translate(-50%, -50%)",
+    top: "15%",
+    left: "15%",
+    right: "15%",
+    bottom: "15%",
+    marginRight: "10%",
+    marginLeft: "10%",
   },
 };
 
@@ -52,9 +58,7 @@ export default function InvoiceModal() {
               </svg>
             </button>
           </div>
-          <div className="w-2/5 mx-auto h-2/5">
-            <img className="mt-5 rounded " src={modalImageUrl} alt="invoice" />
-          </div>
+          <img className="mt-5 rounded " src={modalImageUrl} alt="invoice" />
         </div>
       </Modal>
     </>
