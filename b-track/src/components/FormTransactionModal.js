@@ -110,18 +110,11 @@ export default function FormTransactionModal(props) {
     //* change select option getAll from category for add & edit
   };
 
-  // if (isLoading) {
-  //   return (
-  //     <lottie-player
-  //       src="https://assets2.lottiefiles.com/packages/lf20_YMim6w.json"
-  //       className="w-2/3 mx-auto h-2/3"
-  //       background="transparent"
-  //       speed="1"
-  //       loop
-  //       autoplay
-  //     ></lottie-player>
-  //   );
-  // }
+  const lottiStyle = {
+    width: "50px",
+    height: "50px",
+    marginLeft: "1.5rem",
+  };
 
   return (
     <>
@@ -137,7 +130,7 @@ export default function FormTransactionModal(props) {
           <form className="mt-5" onSubmit={(e) => submitHandler(e)}>
             <div className="w-full mb-3 space-y-2 text-xs">
               <div className="w-full mb-3 space-y-2 text-xs">
-                <label className="py-2 font-semibold text-gray-600">
+                <label className="py-2 text-lg font-semibold text-gray-600">
                   Transaction Name
                 </label>
                 <input
@@ -152,7 +145,7 @@ export default function FormTransactionModal(props) {
 
             <div className="flex-row w-full text-xs md:flex md:space-x-4">
               <div className="w-full mb-3 space-y-2 text-xs">
-                <label className="block py-2 font-semibold text-gray-600">
+                <label className="block py-2 text-lg font-semibold text-gray-600">
                   Price Amount
                 </label>
                 <input
@@ -170,7 +163,7 @@ export default function FormTransactionModal(props) {
 
             <div className="flex-row w-full text-xs md:flex md:space-x-4">
               <div className="w-full mb-3 space-y-2 text-xs">
-                <label className="block py-2 font-semibold text-gray-600">
+                <label className="block py-2 text-lg font-semibold text-gray-600">
                   Date
                 </label>
                 <input
@@ -183,7 +176,7 @@ export default function FormTransactionModal(props) {
               </div>
 
               <div className="w-full mb-3 space-y-2 text-xs">
-                <label className="block py-2 font-semibold text-gray-600">
+                <label className="block py-2 text-lg font-semibold text-gray-600">
                   Category
                 </label>
                 <select
@@ -211,7 +204,7 @@ export default function FormTransactionModal(props) {
             <form>
               <div className="flex-row w-full text-xs md:flex md:space-x-4">
                 <div className="w-full mb-3 space-y-2 text-xs">
-                  <label className="py-2 font-semibold text-gray-600 ">
+                  <label className="py-2 text-lg font-semibold text-gray-600 ">
                     Invoice
                   </label>
                   <div className="relative flex flex-wrap items-stretch w-full mb-4">
@@ -223,7 +216,7 @@ export default function FormTransactionModal(props) {
                 </div>
 
                 <div className="w-full mb-3 space-y-2 text-xs">
-                  <label className="py-2 font-semibold text-gray-600 ">
+                  <label className="py-2 text-lg font-semibold text-gray-600 ">
                     OCR
                   </label>
                   <div className="relative flex flex-wrap items-stretch w-full mb-4">
@@ -233,9 +226,19 @@ export default function FormTransactionModal(props) {
                     >
                       Scan File
                     </button>
+                    {loading && (
+                      <span>
+                        <lottie-player
+                          src="https://assets7.lottiefiles.com/packages/lf20_Hy2FuX.json"
+                          style={lottiStyle}
+                          background="transparent"
+                          speed="1"
+                          loop
+                          autoplay
+                        ></lottie-player>
+                      </span>
+                    )}
                   </div>
-
-                  {loading && <p>Please wait</p>}
                 </div>
               </div>
             </form>

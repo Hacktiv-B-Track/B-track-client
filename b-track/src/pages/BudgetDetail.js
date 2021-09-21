@@ -107,8 +107,8 @@ export default function BudgetDetail() {
 
           <div className="grid-flow-row shadow stats">
             <div className="stat">
-              <div className="stat-title">Total Spending</div>
-              <div className="text-xl stat-value">
+              <div className="text-xl stat-title">Total Spending</div>
+              <div className="text-lg stat-value">
                 {idrCurrency(transactions.initial_amount - transactions.amount)}
                 <span className="ml-1 stat-desc text-success">
                   (
@@ -122,14 +122,14 @@ export default function BudgetDetail() {
               </div>
             </div>
             <div className="stat">
-              <div className="stat-title">Total Budget</div>
-              <div className="text-xl stat-value">
+              <div className="text-xl stat-title">Total Budget</div>
+              <div className="text-lg stat-value">
                 {idrCurrency(transactions.initial_amount)}
               </div>
             </div>
             <div className="stat">
-              <div className="stat-title">Requested Date</div>
-              <div className="text-xl stat-value">
+              <div className="text-xl stat-title">Requested Date</div>
+              <div className="text-lg stat-value">
                 {getDate(transactions.date)}
               </div>
             </div>
@@ -150,19 +150,25 @@ export default function BudgetDetail() {
         <div className="py-2 pr-10 -my-2 overflow-x-auto sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
           <div className="inline-block min-w-full px-8 pt-3 overflow-hidden align-middle bg-white rounded-bl-lg rounded-br-lg shadow shadow-dashboard">
             <h1 className="mb-5 text-5xl font-bold">Transaction List</h1>
-            <button
-              className="px-5 py-2 mb-10 text-blue-500 transition duration-300 border border-blue-500 rounded hover:bg-blue-700 hover:text-white focus:outline-none"
-              onClick={showModal}
-            >
-              Add New Transaction
-            </button>
 
-            <button
-              className="px-5 py-2 mb-10 ml-5 text-blue-500 transition duration-300 border border-blue-500 rounded hover:bg-blue-700 hover:text-white focus:outline-none"
-              onClick={() => generatePDF(transactions)}
-            >
-              Download PDF Report
-            </button>
+            {localStorage.getItem("DepartmentName") !== "Finance" && (
+              <button
+                className="px-5 py-2 mb-10 text-blue-500 transition duration-300 border border-blue-500 rounded hover:bg-blue-700 hover:text-white focus:outline-none"
+                onClick={showModal}
+              >
+                Add New Transaction
+              </button>
+            )}
+
+            {localStorage.getItem("DepartmentName") !== "Finance" && (
+              <button
+                className="px-5 py-2 mb-10 ml-5 text-blue-500 transition duration-300 border border-blue-500 rounded hover:bg-blue-700 hover:text-white focus:outline-none"
+                onClick={() => generatePDF(transactions)}
+              >
+                Download PDF Report
+              </button>
+            )}
+
             <table className="min-w-full mb-10">
               <thead>
                 <tr>
@@ -218,18 +224,24 @@ export default function BudgetDetail() {
                       </td>
                       <td className="px-6 py-4 text-sm leading-5 text-right whitespace-no-wrap border-b border-gray-500 ">
                         <div className="flex justify-between w-40">
-                          <button
-                            className="px-5 py-2 text-blue-500 transition duration-300 border border-blue-500 rounded hover:bg-blue-700 hover:text-white focus:outline-none"
-                            onClick={() => showModal(transaction.id)}
-                          >
-                            Edit
-                          </button>
-                          <button
-                            className="px-5 py-2 text-blue-500 transition duration-300 border border-blue-500 rounded hover:bg-blue-700 hover:text-white focus:outline-none"
-                            onClick={() => deleteHandler(transaction.id)}
-                          >
-                            Delete
-                          </button>
+                          {localStorage.getItem("DepartmentName") !==
+                            "Finance" && (
+                            <button
+                              className="px-5 py-2 text-green-500 transition duration-300 border border-green-500 rounded hover:bg-green-700 hover:text-white focus:outline-none"
+                              onClick={() => showModal(transaction.id)}
+                            >
+                              Edit
+                            </button>
+                          )}
+                          {localStorage.getItem("DepartmentName") !==
+                            "Finance" && (
+                            <button
+                              className="px-5 py-2 text-red-500 transition duration-300 border border-red-500 rounded hover:bg-red-700 hover:text-white focus:outline-none"
+                              onClick={() => deleteHandler(transaction.id)}
+                            >
+                              Delete
+                            </button>
+                          )}
                         </div>
                       </td>
                     </tr>
