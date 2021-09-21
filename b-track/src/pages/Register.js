@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { useHistory } from "react-router-dom";
-import { useSelector } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import axios from '../apis/server'
 import { toast } from 'react-toastify';
-
+import { useEffect } from 'react';
+import { fetchDepartments } from '../store/action';
 
 export default function Register() {
     const departments = useSelector(state => state.departments)
@@ -12,11 +13,27 @@ export default function Register() {
     const [password, setPassword] = useState('')
     const [department, setDepartment] = useState('')
     const [role, setRole] = useState('')
+    const dispatch = useDispatch()
     let history = useHistory();
     
+    useEffect(() => {
+        dispatch(fetchDepartments())
+    }, [])
+
+    useEffect(() => {
+        let filter = departments.filter(dept => dept.name === 'Finance')
+        if (filter[0]?.id === +department) {
+            if (role === 'manager_department') {
+                setRole('manager_finance')
+            } else if(role === 'staff_department') {
+                setRole('staff_finance')
+            }
+        }
+    }, [department,role])
 
     function handleSubmit(e) {
         e.preventDefault()
+        
         axios.post('/register', {
             email, username, password, DepartmentId:department, role
         })
@@ -80,11 +97,12 @@ export default function Register() {
                                         rounded mb-2" />
                             <label htmlFor='department'>Department</label>
                             <select 
-                            value={department} 
+                            value={department}
+                            defaultValue='' 
                             onChange={e=>setDepartment(e.target.value)} 
                             id="department"
                             >
-                                <option value="" selected disabled hidden>
+                                <option value="" disabled hidden>
                                     --SELECT DEPARTMENT--
                                 </option>
                                 {departments.map(department => {
@@ -94,14 +112,15 @@ export default function Register() {
                             <label htmlFor='role'>Role</label>
                             <select 
                             value={role} 
+                            defaultValue=''
                             onChange={e=>setRole(e.target.value)} 
                             id="role"
                             >
-                                <option value="" selected disabled hidden>
+                                <option value="" disabled hidden>
                                     --SELECT ROLE--
                                 </option>
-                                <option value="Staff">Staff</option>
-                                <option value="Manager">Manager</option>
+                                <option value="staff_department">Staff</option>
+                                <option value="manager_department">Manager</option>
                             </select>
             
                             <button type="submit"

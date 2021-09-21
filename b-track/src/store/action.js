@@ -9,7 +9,10 @@ import {
   SCAN_INVOICE,
   SET_LOADING,
   SET_ERROR,
-  FETCH_DEPARTMENTS,
+  FETCH_DEPARTMENTS, 
+  FETCH_BUDGETS, 
+  FETCH_BUDGET_DETAIL,
+  ADD_BUDGET
 } from "./actionType";
 import { toast } from "react-toastify";
 
@@ -48,7 +51,21 @@ function setDepartments(payload) {
   };
 }
 
-export function fetchCategories() {
+function setBudgets(payload) {
+  return {
+      type : FETCH_BUDGETS,
+      payload
+  }
+}
+
+function addBudget(payload) {
+  return {
+      type : ADD_BUDGET,
+      payload
+  }
+}
+
+export function fetchDepartments() {
   return async function (dispatch, getState) {
     try {
       dispatch(setLoading(true));
@@ -85,13 +102,108 @@ export function addTransaction(payload) {
   };
 }
 
-export const fetchTransactions = () => {
+export function fetchBudgets({DepartmentId}) {
+  return async function (dispatch, getState) {
+      try {
+          dispatch(setLoading(true))
+          axios.get('/budgets/department/'+ DepartmentId, {
+            headers:{
+              access_token:localStorage.getItem('access_token')
+            }
+          })
+          .then((response) => {
+            dispatch(setBudgets(response.data))
+          })
+          .finally(() => dispatch(setLoading(false)))
+      } catch (error) {
+          dispatch(setError(error))
+      }
+  }
+}
+
+export function fetchBudgetsFinance() {
+  return async function (dispatch, getState) {
+      try {
+          dispatch(setLoading(true))
+          axios.get('/budgets', {
+            headers:{
+              access_token:localStorage.getItem('access_token')
+            }
+          })
+          .then((response) => {
+            dispatch(setBudgets(response.data))
+          })
+          .finally(() => dispatch(setLoading(false)))
+      } catch (error) {
+          dispatch(setError(error))
+      }
+  }
+}
+// function setBudgetDetail(payload) {
+//   return {
+//       type : FETCH_BUDGET_DETAIL,
+//       payload
+//   }
+// }
+
+// export function fetchBudgetDetail({budgetId}) {
+//   return async function (dispatch, getState) {
+//       try {
+//           dispatch(setLoading(true))
+//           axios.get('/budgets/'+ budgetId, {
+//             headers:{
+//               access_token:localStorage.getItem('access_token')
+//             }
+//           })
+//           .then((response) => {
+//             dispatch(setBudgetDetail(response.data))
+//           })
+//           .finally(() => dispatch(setLoading(false)))
+//       } catch (error) {
+//           dispatch(setError(error))
+//       }
+//   }
+// }
+
+export function requestBudget({name, amount, initial_amount, date, due_date}) {
+  return async function (dispatch, getState) {
+      try {
+          dispatch(setLoading(true))
+          axios.post('/budgets',{
+            name, amount, initial_amount, date, due_date
+          }, 
+          {
+            headers:{
+              access_token:localStorage.getItem('access_token')
+            }
+          })
+          .then((response) => {
+            dispatch(addBudget(response.data))
+            dispatch(toggleModalFormDetail(false))
+            toast.success("Budget Request Success", {
+              position: "top-center",
+              autoClose: 3000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+            });
+          })
+          .finally(() => dispatch(setLoading(false)))
+      } catch (error) {
+          dispatch(setError(error))
+      }
+  }
+}
+
+export const fetchTransactions = ({budgetId}) => {
   return async (dispatch, getState) => {
     try {
       dispatch(loadingToggle(true));
       const { data } = await axios({
         method: "GET",
-        url: `/budgets/1`,
+        url: `/budgets/${budgetId}`,
         headers: { access_token: localStorage.getItem("access_token") },
       });
       const transactions = data;
@@ -122,13 +234,13 @@ export const fetchTransaction = (id) => {
   };
 };
 
-export const postTransaction = (payload, budgedId) => {
+export const postTransaction = (payload, budgetId) => {
   return async (dispatch, getState) => {
     try {
-      console.log(budgedId);
+      console.log(budgetId);
       const { data } = await axios({
         method: "POST",
-        url: `/transactions/${budgedId}`,
+        url: `/transactions/${budgetId}`,
         headers: { access_token: localStorage.getItem("access_token") },
         data: payload,
       });
@@ -157,13 +269,13 @@ export const postTransaction = (payload, budgedId) => {
   };
 };
 
-export const editTransaction = (payload, budgedId) => {
+export const editTransaction = (payload, budgetId) => {
   return async (dispatch, getState) => {
     try {
-      console.log(budgedId);
+      console.log(budgetId);
       const { data } = await axios({
         method: "PUT",
-        url: `/transactions/${budgedId}`,
+        url: `/transactions/${budgetId}`,
         headers: { access_token: localStorage.getItem("access_token") },
         data: payload,
       });

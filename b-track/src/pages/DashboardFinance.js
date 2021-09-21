@@ -1,8 +1,23 @@
-import React from "react";
+import React, { useEffect } from "react";
 import PieChart from "../components/PieChart";
 import LineChart from "../components/LineChart";
+import { fetchBudgetsFinance } from "../store/action";
+import { useDispatch, useSelector } from "react-redux";
+import { useHistory } from "react-router";
 
 export default function DashboardFinance() {
+    const dispatch = useDispatch()
+    const budgets = useSelector(state => state.budgets)
+    let history = useHistory()
+
+    useEffect(() => {
+        dispatch(fetchBudgetsFinance())
+      }, [])
+
+    function handleClick(budgetId) {
+    history.push('/budget/' + budgetId)
+    }
+
   return (
     <>
       {/* section main app.js */}
@@ -25,7 +40,7 @@ export default function DashboardFinance() {
               {/* Finance Body */}
               <div className="flex-col p-5 border">
                 {/* Chart */}
-                <div className=" border">
+                <div className="w-8/12 border">
                     <LineChart className=""/>
                 </div>
                 {/* /Chart */}
@@ -47,65 +62,21 @@ export default function DashboardFinance() {
                     {/* Departemen Body */}
                     <div className='grid grid-cols-4 gap-4'>
                         {/* Card Pie */}
-                        <div className="p-4 border">
-                            <div className="p-6 bg-white rounded-lg">
-                                <h2 className="mb-4 text-lg font-medium text-center text-gray-900">
-                                Budget 1
-                                </h2>
-                                <PieChart />
-                                <p className="mt-2 font-medium text-center">
-                                status: unapprove
-                                </p>
-                            </div>
-                        </div>
-                        {/* Card Pie */}
-                        <div className="p-4 border">
-                            <div className="p-6 bg-white rounded-lg">
-                                <h2 className="mb-4 text-lg font-medium text-center text-gray-900">
-                                Budget 2
-                                </h2>
-                                <PieChart />
-                                <p className="mt-2 font-medium text-center">
-                                status: unapprove
-                                </p>
-                            </div>
-                        </div>
-                        {/* Card Pie */}
-                        <div className="p-4 border">
-                            <div className="p-6 bg-white rounded-lg">
-                                <h2 className="mb-4 text-lg font-medium text-center text-gray-900">
-                                Budget 3
-                                </h2>
-                                <PieChart />
-                                <p className="mt-2 font-medium text-center">
-                                status: unapprove
-                                </p>
-                            </div>
-                        </div>
-                        {/* Card Pie */}
-                        <div className="p-4 border">
-                            <div className="p-6 bg-white rounded-lg">
-                                <h2 className="mb-4 text-lg font-medium text-center text-gray-900">
-                                Budget 4
-                                </h2>
-                                <PieChart />
-                                <p className="mt-2 font-medium text-center">
-                                status: unapprove
-                                </p>
-                            </div>
-                        </div>
-                        {/* Card Pie */}
-                        <div className="p-4 border">
-                            <div className="p-6 bg-white rounded-lg">
-                                <h2 className="mb-4 text-lg font-medium text-center text-gray-900">
-                                Budget 5
-                                </h2>
-                                <PieChart />
-                                <p className="mt-2 font-medium text-center">
-                                status: unapprove
-                                </p>
-                            </div>
-                        </div>
+                        {budgets.map(budget=>{
+                            return (
+                                <div onClick={e=>handleClick(budget.id)} key={budget.id} className="p-4 border-4 group hover:bg-white hover:shadow-lg hover:border-invisible cursor-pointer">
+                                    <div className="p-6 bg-white rounded-lg">
+                                        <h2 className="mb-4 text-lg font-medium text-center text-gray-900">
+                                        {budget.name}
+                                        </h2>
+                                        <PieChart data={{amount:budget.amount, initial:budget.initial_amount}} />
+                                        <p className="mt-2 font-medium text-center">
+                                        status: {budget.status}
+                                        </p>
+                                    </div>
+                                </div>
+                            )
+                        })}
                     </div>
                     {/* Departemen Body */}
                 </div>
@@ -123,7 +94,7 @@ export default function DashboardFinance() {
                     </div>
                     <div className='grid grid-cols-4 gap-4'>
                         {/* Card Pie */}
-                        <div className="p-4 border">
+                        {/* <div className="p-4 border">
                             <div className="p-6 bg-white rounded-lg">
                                 <h2 className="mb-4 text-lg font-medium text-center text-gray-900">
                                 Budget 1
@@ -133,55 +104,7 @@ export default function DashboardFinance() {
                                 status: unapprove
                                 </p>
                             </div>
-                        </div>
-                        {/* Card Pie */}
-                        <div className="p-4 border">
-                            <div className="p-6 bg-white rounded-lg">
-                                <h2 className="mb-4 text-lg font-medium text-center text-gray-900">
-                                Budget 2
-                                </h2>
-                                <PieChart />
-                                <p className="mt-2 font-medium text-center">
-                                status: unapprove
-                                </p>
-                            </div>
-                        </div>
-                        {/* Card Pie */}
-                        <div className="p-4 border">
-                            <div className="p-6 bg-white rounded-lg">
-                                <h2 className="mb-4 text-lg font-medium text-center text-gray-900">
-                                Budget 3
-                                </h2>
-                                <PieChart />
-                                <p className="mt-2 font-medium text-center">
-                                status: unapprove
-                                </p>
-                            </div>
-                        </div>
-                        {/* Card Pie */}
-                        <div className="p-4 border">
-                            <div className="p-6 bg-white rounded-lg">
-                                <h2 className="mb-4 text-lg font-medium text-center text-gray-900">
-                                Budget 4
-                                </h2>
-                                <PieChart />
-                                <p className="mt-2 font-medium text-center">
-                                status: unapprove
-                                </p>
-                            </div>
-                        </div>
-                        {/* Card Pie */}
-                        <div className="p-4 border">
-                            <div className="p-6 bg-white rounded-lg">
-                                <h2 className="mb-4 text-lg font-medium text-center text-gray-900">
-                                Budget 5
-                                </h2>
-                                <PieChart />
-                                <p className="mt-2 font-medium text-center">
-                                status: unapprove
-                                </p>
-                            </div>
-                        </div>
+                        </div> */}
                     </div>
                 </div>
                 {/* /Departemen */}

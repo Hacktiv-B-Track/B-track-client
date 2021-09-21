@@ -1,7 +1,7 @@
 import Modal from "react-modal";
 import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { toggleModalFormDetail } from "../store/action";
+import { requestBudget, toggleModalFormDetail } from "../store/action";
 
 const customStyles = {
   content: {
@@ -21,7 +21,8 @@ export default function FormBudgetModal() {
   const [namePrice, setNamePrice] = useState("");
   const [name, setName] = useState("");
   const [dueDate, setDueDate] = useState("");
-  const [date, setdate] = useState(new Date().toISOString().slice(0, 10))
+  const [date] = useState(new Date().toISOString().slice(0, 10))
+  const [access_token] = useState(localStorage.getItem('access_token'));
 
   const closeModal = () => {
     dispatch(toggleModalFormDetail(false));
@@ -39,16 +40,9 @@ export default function FormBudgetModal() {
 
   const submitHandler = (e) => {
     e.preventDefault();
-    console.log(price);
-    console.log(name);
-    console.log(date);
-    console.log(dueDate);
-
-    //TODO
-    //* get access token for header
-
-    // header: access token
-    // body: body: name, amount, date, due date, di show nama department dari local storage
+    dispatch(requestBudget({
+      name, amount:price, initial_amount:price, date, due_date:dueDate, access_token
+    }))
   };
 
   return (
