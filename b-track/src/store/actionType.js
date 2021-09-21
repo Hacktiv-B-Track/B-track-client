@@ -11,3 +11,4 @@ export const FETCH_DEPARTMENTS = "departments/fetch";
 export const FETCH_BUDGETS = "budgets/fetch";
 export const FETCH_BUDGET_DETAIL = "budgetDetail/fetch";
 export const ADD_BUDGET = "budgtes/add";
+export const ADD_CATEGORIES = "ADD_CATEGORIES";
