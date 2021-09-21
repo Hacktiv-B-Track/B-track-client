@@ -25,32 +25,6 @@ export default function BudgetDetail() {
   const [lineData, setLineData] = useState([]);
   const isLoading = useSelector((state) => state.isLoading);
 
-  //!Backup
-  // useEffect(() => {
-  //   dispatch(fetchTransactions({ budgetId }))
-  //     .then((response) => {
-  //       let label = [];
-  //       let data = [];
-  //       response.Transactions.map((el) => {
-  //         label.push(getFullYear(el.date));
-  //         data.push(el.amount);
-  //       });
-  //       let dataSets = {
-  //         label: "Budget Utilization",
-  //         data: data,
-  //         fill: true,
-  //         backgroundColor: "rgb(255, 99, 132)",
-  //         borderColor: "rgba(255, 99, 132, 0.2)",
-  //       };
-  //       setLineLabel(label);
-  //       setLineData(dataSets);
-  //     })
-  //     .catch((err) => console.log(err))
-  //     .finally(() => {
-  //       dispatch(loadingToggle(false));
-  //     });
-  // }, []);
-
   useEffect(() => {
     dispatch(fetchTransactions(budgetId));
     dispatch(loadingToggle(false));
@@ -122,11 +96,48 @@ export default function BudgetDetail() {
   return (
     <section className="text-gray-600 body-font">
       <div className="container px-5 py-24 mx-auto max-w-7x1">
-        {/* Line Chart */}
-        <div className="w-8/12 mb-5 border">
-          <LineChartTransaction
-            data={{ labels: lineLabel, datasets: [lineData] }}
-          />
+        <div className="grid grid-cols-3 gap-2 mb-5 border-2">
+          <div className="col-span-2">
+            <LineChartTransaction
+              data={{ labels: lineLabel, datasets: [lineData] }}
+            />
+          </div>
+
+          <div className="grid-flow-row shadow stats">
+            <div className="stat">
+              <div className="stat-title">Total Spending</div>
+              <div className="text-xl stat-value">
+                {idrCurrency(transactions.initial_amount - transactions.amount)}
+                <span className="ml-1 stat-desc text-success">
+                  (
+                  {parseFloat(
+                    ((transactions.initial_amount - transactions.amount) /
+                      transactions.initial_amount) *
+                      100
+                  ).toFixed(2)}
+                  %)
+                </span>
+              </div>
+            </div>
+            <div className="stat">
+              <div className="stat-title">Total Budget</div>
+              <div className="text-xl stat-value">
+                {idrCurrency(transactions.initial_amount)}
+              </div>
+            </div>
+            <div className="stat">
+              <div className="stat-title">Requested Date</div>
+              <div className="text-xl stat-value">
+                {getDate(transactions.date)}
+              </div>
+            </div>
+            <div className="stat">
+              <div className="stat-title">Due Date</div>
+              <div className="text-xl stat-value">
+                {getDate(transactions.due_date)}
+              </div>
+            </div>
+          </div>
         </div>
 
         {/* Modal Add Transaction */}
