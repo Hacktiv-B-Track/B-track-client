@@ -25,7 +25,6 @@ const customStyles = {
   },
 };
 
-
 export default function FormTransactionModal(props) {
   const dispatch = useDispatch();
   const { budgetId } = useParams();
