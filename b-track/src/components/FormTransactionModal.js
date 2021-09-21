@@ -15,14 +15,16 @@ import { idrCurrency } from "../helpers/currency";
 
 const customStyles = {
   content: {
-    top: "50%",
-    left: "50%",
-    right: "auto",
-    bottom: "auto",
-    marginRight: "-50%",
-    transform: "translate(-50%, -50%)",
+    top: "15%",
+    left: "15%",
+    right: "15%",
+    bottom: "15%",
+    marginRight: "10%",
+    marginLeft: "10%",
+    // transform: "translate(-50%, -50%)",
   },
 };
+
 
 export default function FormTransactionModal(props) {
   const dispatch = useDispatch();
@@ -124,7 +126,7 @@ export default function FormTransactionModal(props) {
         contentLabel="Add & Edit Modal"
         ariaHideApp={false}
       >
-        <div className="w-96 h-96">
+        <div className="w-full h-auto">
           <form className="mt-5" onSubmit={(e) => submitHandler(e)}>
             <div className="w-full mb-3 space-y-2 text-xs">
               <div className="w-full mb-3 space-y-2 text-xs">
@@ -228,7 +230,7 @@ export default function FormTransactionModal(props) {
 
             {/* Image */}
             <div className="w-full mb-3 space-y-2 text-xs">
-              <img src={imageUrl} alt="invoice" />
+              <img src={imageUrl} alt="invoice" id='invoice'/>
             </div>
 
             <div className="flex flex-col-reverse mt-5 text-right md:space-x-3 md:block">

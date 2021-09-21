@@ -40,7 +40,7 @@ export default function DashboardFinance() {
               {/* Finance Body */}
               <div className="flex-col p-5 border">
                 {/* Chart */}
-                <div className=" border">
+                <div className="w-8/12 border">
                     <LineChart className=""/>
                 </div>
                 {/* /Chart */}

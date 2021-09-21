@@ -109,7 +109,7 @@ export default function BudgetDetail() {
     <section className="text-gray-600 body-font">
       <div className="container px-5 py-24 mx-auto max-w-7x1">
         {/* Line Chart */}
-        <div className="mb-5 border">
+        <div className="mb-5 border w-8/12">
           <LineChartTransaction
             data={{ labels: lineLabel, datasets: [lineData] }}
           />
