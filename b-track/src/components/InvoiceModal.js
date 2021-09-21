@@ -1,5 +1,4 @@
 import Modal from "react-modal";
-import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { toggleModalImage } from "../store/action";
 
