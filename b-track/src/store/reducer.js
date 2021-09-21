@@ -9,9 +9,10 @@ import {
   SET_ERROR,
   SET_LOADING,
   FETCH_DEPARTMENTS,
-  FETCH_BUDGETS, 
-  FETCH_BUDGET_DETAIL, 
-  ADD_BUDGET
+  FETCH_BUDGETS,
+  FETCH_BUDGET_DETAIL,
+  ADD_BUDGET,
+  ADD_CATEGORIES,
 } from "./actionType";
 
 const initialState = {
@@ -25,8 +26,9 @@ const initialState = {
   transaction: {},
   isLoading: true,
   dataScan: {},
-  budgets:[],
-  budgetDetail:[]
+  budgets: [],
+  budgetDetail: [],
+  categories: [],
 };
 
 export default function reducer(state = initialState, action) {
@@ -96,6 +98,12 @@ export default function reducer(state = initialState, action) {
         ...state,
         budgets: [...state.budgets, action.payload],
       };
+    case ADD_CATEGORIES:
+      return {
+        ...state,
+        categories: action.payload,
+      };
+
     default:
       return state;
   }

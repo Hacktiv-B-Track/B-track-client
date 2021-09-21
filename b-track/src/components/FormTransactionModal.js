@@ -8,8 +8,10 @@ import {
   fetchScanInvoice,
   postTransaction,
   editTransaction,
+  fetchCategories,
 } from "../store/action";
 import { idrCurrency } from "../helpers/currency";
+import { editFormDate } from "../helpers/getDate";
 
 //TODO Refetch after add
 
@@ -29,16 +31,18 @@ export default function FormTransactionModal(props) {
   const dispatch = useDispatch();
   const { budgetId } = useParams();
   const isModal = useSelector((state) => state.isModalFormDetail);
-  const [price, setPrice] = useState(0);
+  const [price, setPrice] = useState();
   const [namePrice, setNamePrice] = useState("");
   const [name, setName] = useState("");
   const [file, setFile] = useState(null);
   const [date, setDate] = useState("");
+  const categories = useSelector((state) => state.categories);
   const [category, setCategory] = useState("");
   const [imageUrl, setImageUrl] = useState("");
   const [loading, setLoading] = useState(false);
 
   useEffect(async () => {
+    dispatch(fetchCategories());
     if (props.id) {
       dispatch(fetchTransaction(props.id))
         .then((res) => {
@@ -46,8 +50,8 @@ export default function FormTransactionModal(props) {
           setNamePrice(idrCurrency(res.amount));
           setName(res.name);
           setFile(res.invoice);
-          setDate(res.Date);
-          setCategory(res.category);
+          setDate(editFormDate(res.date));
+          setCategory(res.Category.id);
         })
         .catch((err) => console.log(err));
     }
@@ -80,7 +84,11 @@ export default function FormTransactionModal(props) {
 
   const submitHandler = (e) => {
     e.preventDefault();
-    const newDate = new Date(date).toISOString();
+    let newDate;
+    if (date) {
+      newDate = new Date(date).toISOString();
+    }
+
     let data = {
       name,
       date: newDate,
@@ -92,7 +100,7 @@ export default function FormTransactionModal(props) {
         "https://ik.imagekit.io/ddtyiwgu4rm/invoice-kledo-1_pHFD1g4Hv.jpg",
     };
     if (props.id) {
-      dispatch(editTransaction(data, budgetId));
+      dispatch(editTransaction(data, props.id, budgetId));
     } else {
       dispatch(postTransaction(data, budgetId));
     }
@@ -187,10 +195,14 @@ export default function FormTransactionModal(props) {
                   <option value="" selected disabled>
                     --SELECT CATEGORY--
                   </option>
-                  <option value="1">Belanja</option>
-                  <option value="2">Alat kantor</option>
-                  <option value="3">Operasional</option>
-                  <option value="4">Lain-lain</option>
+
+                  {categories.map((el) => {
+                    return (
+                      <option key={el.id} value={el.id}>
+                        {el.name}
+                      </option>
+                    );
+                  })}
                 </select>
               </div>
             </div>
@@ -222,6 +234,7 @@ export default function FormTransactionModal(props) {
                       Scan File
                     </button>
                   </div>
+
                   {loading && <p>Please wait</p>}
                 </div>
               </div>
@@ -229,7 +242,7 @@ export default function FormTransactionModal(props) {
 
             {/* Image */}
             <div className="w-full mb-3 space-y-2 text-xs">
-              <img src={imageUrl} alt="invoice" id='invoice'/>
+              <img src={imageUrl} alt="invoice" id="invoice" />
             </div>
 
             <div className="flex flex-col-reverse mt-5 text-right md:space-x-3 md:block">

@@ -10,35 +10,36 @@ import { useHistory } from "react-router";
 
 export default function DashboardDepartment() {
   const dispatch = useDispatch();
-  const [DepartmentId] = useState(localStorage.getItem('DepartmentId'))
-  const [DepartmentName] = useState(localStorage.getItem('DepartmentName'))
-  const budgets = useSelector(state => state.budgets)
-  let history = useHistory()
-  
+  const [DepartmentId] = useState(localStorage.getItem("DepartmentId"));
+  const [DepartmentName] = useState(localStorage.getItem("DepartmentName"));
+  const budgets = useSelector((state) => state.budgets);
+  let history = useHistory();
+
   useEffect(() => {
-    dispatch(fetchBudgets({DepartmentId}))
-  }, [])
-  
+    dispatch(fetchBudgets({ DepartmentId }));
+  }, []);
+
   const showModal = () => {
     dispatch(toggleModalFormDetail(true));
   };
 
   function handleClick(budgetId) {
-    history.push('/budget/' + budgetId)
+    history.push("/budget/" + budgetId);
   }
+
+  console.log(budgets, "DATA");
 
   return (
     <>
       {/* section main app.js */}
       <div className="max-w-full max-h-full min-h-screen">
         <div className="container mx-auto">
-        <FormBudgetModal name="add" />
-        <InvoiceModal image="https://images.unsplash.com/photo-1628191137573-dee64e727614?ixid=MnwxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80" />
+          <FormBudgetModal name="add" />
+          <InvoiceModal image="https://images.unsplash.com/photo-1628191137573-dee64e727614?ixid=MnwxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80" />
 
           {/* Department Dashboard */}
           <section className="text-gray-600 body-font">
             <div className="container px-5 py-24 mx-auto max-w-7x1">
-
               {/* Departemen Head */}
               <div className="flex flex-wrap w-full p-4 mb-4">
                 <div className="w-full mb-6 lg:mb-0">
@@ -58,8 +59,8 @@ export default function DashboardDepartment() {
               {/* Departemen Head */}
 
               {/* Departemen Body */}
-              <div className='grid grid-cols-4 gap-4'>
-                {budgets.map(budget=>{
+              <div className="grid grid-cols-4 gap-4">
+                {budgets.map((budget) => {
                   return (
                     <div onClick={e=>handleClick(budget.id)} key={budget.id} className="p-4 border-4 group hover:bg-white hover:shadow-lg hover:border-invisible cursor-pointer">
                         <div className="p-6 bg-white flex flex-col items-center rounded-lg">
@@ -72,11 +73,10 @@ export default function DashboardDepartment() {
                             {budget.status === 'Rejected' && (<p className='mt-2 text-base font-medium text-center badge badge-error'>{budget.status}</p>)}
                         </div>
                     </div>
-                  )
+                  );
                 })}
               </div>
               {/* Departemen Body */}
-            
             </div>
           </section>
         </div>
