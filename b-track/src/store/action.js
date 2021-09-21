@@ -103,6 +103,7 @@ export function addTransaction(payload) {
   };
 }
 
+
 export function addCategories(payload) {
   return {
     type: ADD_CATEGORIES,
@@ -124,6 +125,7 @@ export const fetchCategories = () => {
     }
   };
 };
+
 
 export function fetchBudgets({ DepartmentId }) {
   return async function (dispatch, getState) {
@@ -236,6 +238,7 @@ export function requestBudget({
   };
 }
 
+
 export const fetchTransactions = (budgetId) => {
   return async (dispatch, getState) => {
     try {
@@ -246,6 +249,7 @@ export const fetchTransactions = (budgetId) => {
         headers: { access_token: localStorage.getItem("access_token") },
       });
       const transactions = data;
+
       dispatch(addTransactions(transactions));
       dispatch(loadingToggle(false));
       // return Promise.resolve(transactions);
