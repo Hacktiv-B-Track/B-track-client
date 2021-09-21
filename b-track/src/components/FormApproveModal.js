@@ -29,6 +29,7 @@ export default function FormApproveModal({id, name, amount, date:defaultDate, du
 
   useEffect(() => {
     priceHandler(amount)
+    setDate(defaultDate)
     setDueDate(defaultDueDate)
   }, [id])
 
@@ -115,6 +116,7 @@ export default function FormApproveModal({id, name, amount, date:defaultDate, du
                 </label>
                 <input
                   type="date"
+                  value={date}
                   placeholder=""
                   min={date}
                   className="w-full h-10 px-4 border rounded-lg appearance-none bg-grey-lighter text-grey-darker border-grey-lighter"
@@ -130,6 +132,7 @@ export default function FormApproveModal({id, name, amount, date:defaultDate, du
                 </label>
                 <input
                   type="date"
+                  value={dueDate}
                   placeholder=""
                   min={date}
                   className="w-full h-10 px-4 border rounded-lg appearance-none bg-grey-lighter text-grey-darker border-grey-lighter"

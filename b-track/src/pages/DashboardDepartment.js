@@ -12,6 +12,7 @@ export default function DashboardDepartment() {
   const dispatch = useDispatch();
   const [DepartmentId] = useState(localStorage.getItem("DepartmentId"));
   const [DepartmentName] = useState(localStorage.getItem("DepartmentName"));
+  const [role] = useState(localStorage.getItem("role"));
   const budgets = useSelector((state) => state.budgets);
   let history = useHistory();
 
@@ -50,12 +51,13 @@ export default function DashboardDepartment() {
                 </div>
               </div>
 
-              <button
+              {role === 'manager_department' && (<button
                 className="px-5 py-2 mb-10 text-blue-500 transition duration-300 border border-blue-500 rounded hover:bg-blue-700 hover:text-white focus:outline-none"
                 onClick={showModal}
               >
                 Request New Budget
-              </button>
+              </button>)}
+              
               {/* Departemen Head */}
 
               {/* Departemen Body */}

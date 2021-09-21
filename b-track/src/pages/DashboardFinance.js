@@ -4,8 +4,8 @@ import LineChart from "../components/LineChart";
 import { fetchBudgetsFinance, fetchDepartments, toggleModalFormDetail } from "../store/action";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router";
-import InvoiceModal from "../components/InvoiceModal";
 import FormApproveModal from '../components/FormApproveModal'
+import { idrCurrency } from "../helpers/currency";
 
 export default function DashboardFinance() {''
     const dispatch = useDispatch()
@@ -13,14 +13,29 @@ export default function DashboardFinance() {''
     const [budgetName, setBudgetName] = useState('')
     const [amount, setAmount] = useState(0)
     const [date, setDate] = useState(new Date().toISOString().slice(0, 10))
-    const [due_date, stedue_date] = useState(new Date().toISOString().slice(0, 10))
+    const [due_date, setDueDate] = useState(new Date().toISOString().slice(0, 10))
+    const [role] = useState(localStorage.getItem("role"));
+    const [totalBudget, setTotalBudget] = useState([])
+    const [totalSpent, setTotalSpent] = useState([])
     const budgets = useSelector(state => state.budgets)
-    let history = useHistory()
+    const loading = useSelector(state => state.loading)
+    const error = useSelector(state => state.error)
     const departments = useSelector(state => state.departments)
+    const refresh = useSelector(state => state.refresh)
+    let history = useHistory()
+    const reducer = (accumulator, curr) => accumulator + curr;
+    
     useEffect(() => {
         dispatch(fetchBudgetsFinance())
         dispatch(fetchDepartments())
-      }, [])
+      }, [refresh])
+
+    useEffect(() => {
+      let arrayBudget = budgets.map(el=>el.initial_amount)
+      let arraySpent = budgets.map(el=>el.amount)
+      setTotalBudget(arrayBudget.reduce(reducer)) 
+      setTotalSpent(totalBudget-arraySpent.reduce(reducer))
+    }, [budgets])
 
     function handleClick({budgetId, status, name, amount, date, due_date}) {
       if (status === 'Approved') {
@@ -35,9 +50,22 @@ export default function DashboardFinance() {''
       setBudgetName(name)
       setAmount(amount)
       setDate(date.slice(0, 10))
-      stedue_date(due_date.slice(0, 10))
+      setDueDate(due_date.slice(0, 10))
       dispatch(toggleModalFormDetail(true));
     };
+
+  if (loading) {
+    return (
+      <lottie-player
+        src="https://assets9.lottiefiles.com/private_files/lf30_p3pfeg6p.json"
+        className="mx-auto w-96 h-96"
+        background="transparent"
+        speed="1"
+        loop
+        autoplay
+      ></lottie-player>
+    );
+  }
 
   return (
     <>
@@ -45,7 +73,6 @@ export default function DashboardFinance() {''
       <div className="max-w-full max-h-full min-h-screen">
         <div className="container mx-auto">
         <FormApproveModal id={id} name={budgetName} amount={amount} date={date} due_date={due_date}/>
-        <InvoiceModal image="https://images.unsplash.com/photo-1628191137573-dee64e727614?ixid=MnwxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80" />
           {/* Department Dashboard */}
           <section className="text-gray-600 body-font">
             <div className="container px-5 py-24 mx-auto max-w-7x1">
@@ -63,9 +90,37 @@ export default function DashboardFinance() {''
               {/* Finance Body */}
               <div className="flex-col p-5 border">
                 {/* Chart */}
-                <div className="w-8/12 border">
-                    <LineChart className=""/>
+                <div className='grid grid-cols-3 gap-2 mb-5 border-2'>
+                  <div className="col-span-2">
+                    <LineChart/>
+                  </div>
+
+                  <div className="grid-flow-row shadow stats">
+                    <div className="stat">
+                      <div className="text-xl stat-title">Total Spending</div>
+                      <div className="text-xl stat-value">
+                        {idrCurrency(totalSpent)}
+                        <span className="ml-1 stat-desc text-success">
+                          (
+                            {parseFloat(
+                              (totalSpent /
+                                totalBudget) *
+                                100
+                            ).toFixed(2)}
+                          %)
+                        </span>
+                      </div>
+                    </div>
+                    <div className="stat">
+                      <div className="text-xl stat-title">Total Budget</div>
+                      <div className="text-xl stat-value">
+                         {idrCurrency(totalBudget)}
+                      </div>
+                    </div>
+                  </div>
                 </div>
+                
+                
                 {/* /Chart */}
 
                     {departments.map(department => {
@@ -73,12 +128,18 @@ export default function DashboardFinance() {''
                         <div key={department.id} className='border mt-5'>
                           <div className="flex flex-wrap w-full p-4 mb-4">
                                 <div className="w-full mb-6 lg:mb-0">
-                                <h1 className="mb-2 text-5xl font-bold text-gray-900 sm:text-4xl title-font">
-                                    {department.name}
-                                </h1>
+                                  <h1 className="mb-2 text-5xl font-bold text-gray-900 sm:text-4xl title-font">
+                                      {department.name}
+                                  </h1>
                                 <div className="w-20 h-1 bg-indigo-500 rounded"></div>
                                 </div>
                             </div>
+                                {role === 'manager_finance' && department.name === 'Finance' && (<button
+                                  className="mx-3 px-5 py-2 mb-10 text-blue-500 transition duration-300 border border-blue-500 rounded hover:bg-blue-700 hover:text-white focus:outline-none"
+                                  onClick={showModal}
+                                >
+                                  Request New Budget
+                                </button>)}
                             
                             <div className='grid grid-cols-4 gap-4'>
                                 {budgets.map(budget=>{

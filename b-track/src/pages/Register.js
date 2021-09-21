@@ -33,7 +33,6 @@ export default function Register() {
 
     function handleSubmit(e) {
         e.preventDefault()
-        
         axios.post('/register', {
             email, username, password, DepartmentId:department, role
         })
@@ -49,7 +48,29 @@ export default function Register() {
                 });
             history.push('/login')
         })
-        .catch(err=>console.log(err))
+        .catch(error=>{
+            if (error.response) {
+                // Request made and server responded
+                toast.error(`${error.response.data.message}`, {
+                    position: "top-center",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                });
+                console.log(error.response.data);
+                console.log(error.response.status);
+                console.log(error.response.headers);
+            } else if (error.request) {
+                // The request was made but no response was received
+                console.log(error.request);
+            } else {
+                // Something happened in setting up the request that triggered an Error
+                console.log('Error', error.message);
+            }   
+        })
     }
 
     function handleOnClick(e) {

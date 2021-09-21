@@ -14,6 +14,7 @@ import {
   FETCH_BUDGET_DETAIL,
   ADD_BUDGET,
   ADD_CATEGORIES,
+  SET_REFRESH
 } from "./actionType";
 import { toast } from "react-toastify";
 
@@ -41,6 +42,13 @@ function setError(payload) {
 function setLoading(payload) {
   return {
     type: SET_LOADING,
+    payload,
+  };
+}
+
+function setRefresh(payload) {
+  return {
+    type: SET_REFRESH,
     payload,
   };
 }
@@ -171,7 +179,7 @@ export function EditBudget({amount, date, due_date, status, budgetId}) {
   return async function (dispatch, getState) {
     try {
         dispatch(setLoading(true))
-        axios.put('/budgets/' + budgetId,{
+        const response = await axios.put('/budgets/' + budgetId,{
           amount, date, due_date, status
         }, 
         {
@@ -179,22 +187,43 @@ export function EditBudget({amount, date, due_date, status, budgetId}) {
             access_token:localStorage.getItem('access_token')
           }
         })
-        .then((response) => {
-          dispatch(addBudget(response.data))
-          dispatch(toggleModalFormDetail(false))
-          toast.success("Status Edited", {
-            position: "top-center",
-            autoClose: 3000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-          });
-        })
-        .finally(() => dispatch(setLoading(false)))
+        dispatch(setRefresh(1))
+        dispatch(toggleModalFormDetail(false))
+        toast.success("Status Edited", {
+          position: "top-center",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
     } catch (error) {
+      console.log('error');
         dispatch(setError(error))
+        if (error.response) {
+            // Request made and server responded
+            toast.error(`${error.response.data.message}`, {
+                position: "top-center",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+            });
+            console.log(error.response.data);
+            console.log(error.response.status);
+            console.log(error.response.headers);
+        } else if (error.request) {
+            // The request was made but no response was received
+            console.log(error.request);
+        } else {
+            // Something happened in setting up the request that triggered an Error
+            console.log('Error', error.message);
+        }
+    } finally {
+      dispatch(setLoading(false))
     }
   }
 }
