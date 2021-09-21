@@ -7,7 +7,6 @@ import Register from "./pages/Register";
 import DashboardDepartment from "./pages/DashboardDepartment";
 import BudgetDetail from "./pages/BudgetDetail";
 import DashboardFinance from "./pages/DashboardFinance";
-import Report from "./components/Report";
 import BudgetDetailFinance from "./pages/BudgetDetailFinance";
 
 import { useState } from "react";
@@ -36,7 +35,6 @@ function App() {
   if (isAuthenticated) {
     routes = (
       <Switch>
-        <Route path="/test" component={Report} />
         <Route path="/users" component={Users} />
         <Route exact path="/dashboard/finance" component={DashboardFinance} />
         <Route
