@@ -139,31 +139,38 @@ export function fetchBudgetsFinance() {
       }
   }
 }
-// function setBudgetDetail(payload) {
-//   return {
-//       type : FETCH_BUDGET_DETAIL,
-//       payload
-//   }
-// }
 
-// export function fetchBudgetDetail({budgetId}) {
-//   return async function (dispatch, getState) {
-//       try {
-//           dispatch(setLoading(true))
-//           axios.get('/budgets/'+ budgetId, {
-//             headers:{
-//               access_token:localStorage.getItem('access_token')
-//             }
-//           })
-//           .then((response) => {
-//             dispatch(setBudgetDetail(response.data))
-//           })
-//           .finally(() => dispatch(setLoading(false)))
-//       } catch (error) {
-//           dispatch(setError(error))
-//       }
-//   }
-// }
+export function EditBudget({amount, date, due_date, status, budgetId}) {
+  return async function (dispatch, getState) {
+    try {
+        dispatch(setLoading(true))
+        axios.put('/budgets/' + budgetId,{
+          amount, date, due_date, status
+        }, 
+        {
+          headers:{
+            access_token:localStorage.getItem('access_token')
+          }
+        })
+        .then((response) => {
+          dispatch(addBudget(response.data))
+          dispatch(toggleModalFormDetail(false))
+          toast.success("Status Edited", {
+            position: "top-center",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+          });
+        })
+        .finally(() => dispatch(setLoading(false)))
+    } catch (error) {
+        dispatch(setError(error))
+    }
+  }
+}
 
 export function requestBudget({name, amount, initial_amount, date, due_date}) {
   return async function (dispatch, getState) {
@@ -357,3 +364,29 @@ export function scanInvoice(payload) {
     payload: payload,
   };
 }
+
+// function setBudgetDetail(payload) {
+//   return {
+//       type : FETCH_BUDGET_DETAIL,
+//       payload
+//   }
+// }
+
+// export function fetchBudgetDetail({budgetId}) {
+//   return async function (dispatch, getState) {
+//       try {
+//           dispatch(setLoading(true))
+//           axios.get('/budgets/'+ budgetId, {
+//             headers:{
+//               access_token:localStorage.getItem('access_token')
+//             }
+//           })
+//           .then((response) => {
+//             dispatch(setBudgetDetail(response.data))
+//           })
+//           .finally(() => dispatch(setLoading(false)))
+//       } catch (error) {
+//           dispatch(setError(error))
+//       }
+//   }
+// }
