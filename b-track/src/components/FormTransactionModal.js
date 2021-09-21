@@ -31,7 +31,7 @@ export default function FormTransactionModal(props) {
   const dispatch = useDispatch();
   const { budgetId } = useParams();
   const isModal = useSelector((state) => state.isModalFormDetail);
-  const [price, setPrice] = useState(0);
+  const [price, setPrice] = useState();
   const [namePrice, setNamePrice] = useState("");
   const [name, setName] = useState("");
   const [file, setFile] = useState(null);
@@ -84,7 +84,11 @@ export default function FormTransactionModal(props) {
 
   const submitHandler = (e) => {
     e.preventDefault();
-    const newDate = new Date(date).toISOString();
+    let newDate;
+    if (date) {
+      newDate = new Date(date).toISOString();
+    }
+
     let data = {
       name,
       date: newDate,
@@ -96,7 +100,7 @@ export default function FormTransactionModal(props) {
         "https://ik.imagekit.io/ddtyiwgu4rm/invoice-kledo-1_pHFD1g4Hv.jpg",
     };
     if (props.id) {
-      dispatch(editTransaction(data, budgetId));
+      dispatch(editTransaction(data, props.id, budgetId));
     } else {
       dispatch(postTransaction(data, budgetId));
     }

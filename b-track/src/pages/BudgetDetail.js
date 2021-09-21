@@ -1,9 +1,4 @@
-// import { useDispatch, useSelector } from "react-redux";
-// import { fetchBudgetDetail, toggleModalFormDetail, toggleModalImage } from "../store/action";
-// import FormTransactionModal from "../components/FormTransactionModal";
-// import InvoiceModal from "../components/InvoiceModal";
-// import { useEffect, useState } from "react";
-import { useParams } from 'react-router-dom'
+import { useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { toast } from "react-toastify";
@@ -22,44 +17,63 @@ import { idrCurrency } from "../helpers/currency";
 import { getDate, getFullYear } from "../helpers/getDate";
 
 export default function BudgetDetail() {
-  const budgetDetail = useSelector(state => state.budgetDetail)
   const dispatch = useDispatch();
   let { budgetId } = useParams();
-  // console.log(budgetDetail);
-
-  // useEffect(() => {
-  //   dispatch(fetchBudgetDetail({budgetId}))
-  // }, [])
   const transactions = useSelector((state) => state.transactions);
   const [transactionId, setTransactionId] = useState("");
   const [lineLabel, setLineLabel] = useState([]);
   const [lineData, setLineData] = useState([]);
   const isLoading = useSelector((state) => state.isLoading);
 
+  //!Backup
+  // useEffect(() => {
+  //   dispatch(fetchTransactions({ budgetId }))
+  //     .then((response) => {
+  //       let label = [];
+  //       let data = [];
+  //       response.Transactions.map((el) => {
+  //         label.push(getFullYear(el.date));
+  //         data.push(el.amount);
+  //       });
+  //       let dataSets = {
+  //         label: "Budget Utilization",
+  //         data: data,
+  //         fill: true,
+  //         backgroundColor: "rgb(255, 99, 132)",
+  //         borderColor: "rgba(255, 99, 132, 0.2)",
+  //       };
+  //       setLineLabel(label);
+  //       setLineData(dataSets);
+  //     })
+  //     .catch((err) => console.log(err))
+  //     .finally(() => {
+  //       dispatch(loadingToggle(false));
+  //     });
+  // }, []);
+
   useEffect(() => {
-    dispatch(fetchTransactions({budgetId}))
-      .then((response) => {
-        let label = [];
-        let data = [];
-        response.Transactions.map((el) => {
-          label.push(getFullYear(el.date));
-          data.push(el.amount);
-        });
-        let dataSets = {
-          label: "Budget Utilization",
-          data: data,
-          fill: true,
-          backgroundColor: "rgb(255, 99, 132)",
-          borderColor: "rgba(255, 99, 132, 0.2)",
-        };
-        setLineLabel(label);
-        setLineData(dataSets);
-      })
-      .catch((err) => console.log(err))
-      .finally(() => {
-        dispatch(loadingToggle(false));
-      });
+    dispatch(fetchTransactions(budgetId));
+    dispatch(loadingToggle(false));
   }, []);
+
+  useEffect(() => {
+    //! mapping buat chart
+    let label = [];
+    let data = [];
+    transactions?.Transactions?.map((el) => {
+      label.push(getFullYear(el.date));
+      data.push(el.amount);
+    });
+    let dataSets = {
+      label: "Budget Utilization",
+      data: data,
+      fill: true,
+      backgroundColor: "rgb(255, 99, 132)",
+      borderColor: "rgba(255, 99, 132, 0.2)",
+    };
+    setLineLabel(label);
+    setLineData(dataSets);
+  }, [transactions]);
 
   const showModal = (transactionId) => {
     if (typeof transactionId === "number") {
@@ -77,7 +91,7 @@ export default function BudgetDetail() {
   };
 
   const deleteHandler = (transactionId) => {
-    dispatch(deleteTransaction(transactionId))
+    dispatch(deleteTransaction(transactionId, budgetId))
       .then((response) => {
         toast.success(response.message, {
           position: "top-center",
@@ -95,8 +109,8 @@ export default function BudgetDetail() {
   if (isLoading) {
     return (
       <lottie-player
-        src="https://assets2.lottiefiles.com/packages/lf20_YMim6w.json"
-        className="w-2/3 mx-auto h-2/3"
+        src="https://assets9.lottiefiles.com/private_files/lf30_p3pfeg6p.json"
+        className="mx-auto w-96 h-96"
         background="transparent"
         speed="1"
         loop
@@ -109,15 +123,11 @@ export default function BudgetDetail() {
     <section className="text-gray-600 body-font">
       <div className="container px-5 py-24 mx-auto max-w-7x1">
         {/* Line Chart */}
-        <div className="mb-5 border w-8/12">
+        <div className="w-8/12 mb-5 border">
           <LineChartTransaction
             data={{ labels: lineLabel, datasets: [lineData] }}
           />
         </div>
-
-        {/* <pre>{JSON.stringify(lineLabel, null, 2)}</pre>
-        <pre>{JSON.stringify(lineData, null, 2)}</pre> */}
-        {/* <pre>{JSON.stringify(transactions, null, 2)}</pre> */}
 
         {/* Modal Add Transaction */}
         <FormTransactionModal id={transactionId} />
@@ -126,7 +136,6 @@ export default function BudgetDetail() {
         {/* Table */}
         <div className="py-2 pr-10 -my-2 overflow-x-auto sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
           <div className="inline-block min-w-full px-8 pt-3 overflow-hidden align-middle bg-white rounded-bl-lg rounded-br-lg shadow shadow-dashboard">
-            {/* // <h1 className="mb-2 text-xl font-bold">{budgetDetail.name}</h1> */}
             <h1 className="mb-5 text-5xl font-bold">{transactions.name}</h1>
             <button
               className="px-5 py-2 mb-10 text-blue-500 transition duration-300 border border-blue-500 rounded hover:bg-blue-700 hover:text-white focus:outline-none"
@@ -159,10 +168,7 @@ export default function BudgetDetail() {
                 </tr>
               </thead>
               <tbody className="bg-white">
-                {/* // {budgetDetail?.Transactions?.map(transaction => {
-                //   return (
-                //     <tr> */}
-                {transactions.Transactions.map((transaction) => {
+                {transactions?.Transactions?.map((transaction) => {
                   return (
                     <tr key={transaction.id}>
                       <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-500 ">
@@ -171,10 +177,6 @@ export default function BudgetDetail() {
                         </div>
                       </td>
                       <td className="px-6 py-4 text-sm leading-5 text-blue-900 whitespace-no-wrap border-b border-gray-500 ">
-                      {/* //   {transaction.date}
-                      // </td>
-                      // <td className="px-6 py-4 text-sm leading-5 text-blue-900 whitespace-no-wrap border-b border-gray-500 ">
-                      //   {transaction.amount} */}
                         {getDate(transaction.date)}
                       </td>
                       <td className="px-6 py-4 text-sm leading-5 text-blue-900 whitespace-no-wrap border-b border-gray-500 ">
@@ -187,7 +189,6 @@ export default function BudgetDetail() {
                         {transaction.User.username}
                       </td>
                       <td className="px-6 py-4 text-sm leading-5 text-blue-900 whitespace-no-wrap border-b border-gray-500 ">
-                        {/* // <button className="text-blue-500" onClick={showImageModal}> */}
                         <button
                           className="text-blue-500"
                           onClick={() => showImageModal(transaction.invoice)}
@@ -197,10 +198,6 @@ export default function BudgetDetail() {
                       </td>
                       <td className="px-6 py-4 text-sm leading-5 text-right whitespace-no-wrap border-b border-gray-500 ">
                         <div className="flex justify-between w-40">
-                          {/* // <button className="px-5 py-2 text-blue-500 transition duration-300 border border-blue-500 rounded hover:bg-blue-700 hover:text-white focus:outline-none">
-                          //   Edit
-                          // </button>
-                          // <button className="px-5 py-2 text-blue-500 transition duration-300 border border-blue-500 rounded hover:bg-blue-700 hover:text-white focus:outline-none"> */}
                           <button
                             className="px-5 py-2 text-blue-500 transition duration-300 border border-blue-500 rounded hover:bg-blue-700 hover:text-white focus:outline-none"
                             onClick={() => showModal(transaction.id)}
@@ -216,9 +213,6 @@ export default function BudgetDetail() {
                         </div>
                       </td>
                     </tr>
-                //   )
-                // })}
-                
                   );
                 })}
               </tbody>
