@@ -31,6 +31,51 @@ export default function Register() {
     }
   }, [department, role]);
 
+    function handleSubmit(e) {
+        e.preventDefault()
+        axios.post('/register', {
+            email, username, password, DepartmentId:department, role
+        })
+        .then(res => {
+            toast('Register Succesful!', {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                });
+            history.push('/login')
+        })
+        .catch(error=>{
+            if (error.response) {
+                // Request made and server responded
+                error.response.data.message.map((err) =>
+                    toast.error(err, {
+                    position: "top-center",
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    })
+                );
+                console.log(error.response.data);
+                console.log(error.response.status);
+                console.log(error.response.headers);
+            } else if (error.request) {
+                // The request was made but no response was received
+                console.log(error.request);
+            } else {
+                // Something happened in setting up the request that triggered an Error
+                console.log('Error', error.message);
+            }   
+        })
+      }
+
+
   function handleSubmit(e) {
     e.preventDefault();
     axios
