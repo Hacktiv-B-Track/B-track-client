@@ -37,6 +37,7 @@ export default function BudgetDetail() {
     //! mapping buat chart
     let label = [];
     let data = [];
+    console.log(transactions,'------data');
     const sorted = transactions?.Transactions?.sort(
       (a, b) => new Date(a.date) - new Date(b.date)
     );
