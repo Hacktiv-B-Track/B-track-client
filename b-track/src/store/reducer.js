@@ -13,7 +13,8 @@ import {
   FETCH_BUDGET_DETAIL,
   ADD_BUDGET,
   ADD_CATEGORIES,
-  SET_REFRESH
+  SET_REFRESH,
+  TOGGLE_MODAL_DELETE
 } from "./actionType";
 
 const initialState = {
@@ -30,7 +31,8 @@ const initialState = {
   budgets: [],
   budgetDetail: [],
   categories: [],
-  refresh:0
+  refresh:0,
+  isDeleteModal:false
 };
 
 export default function reducer(state = initialState, action) {
@@ -39,6 +41,11 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         isModalFormDetail: action.payload,
+      };
+    case TOGGLE_MODAL_DELETE:
+      return {
+        ...state,
+        isDeleteModal: action.payload,
       };
     case TOGGLE_MODAL_IMAGE:
       return {
