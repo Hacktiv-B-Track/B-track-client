@@ -199,7 +199,6 @@ export function EditBudget({amount, date, due_date, status, budgetId}) {
           progress: undefined,
         });
     } catch (error) {
-      console.log('error');
         dispatch(setError(error))
         if (error.response) {
             // Request made and server responded
@@ -231,20 +230,18 @@ export function EditBudget({amount, date, due_date, status, budgetId}) {
 export function requestBudget({
   name,
   amount,
-  initial_amount,
   date,
   due_date,
 }) {
   return async function (dispatch, getState) {
     try {
       dispatch(setLoading(true));
-      axios
+      const response = await axios
         .post(
           "/budgets",
           {
             name,
             amount,
-            initial_amount,
             date,
             due_date,
           },
@@ -254,22 +251,42 @@ export function requestBudget({
             },
           }
         )
-        .then((response) => {
-          dispatch(addBudget(response.data));
-          dispatch(toggleModalFormDetail(false));
-          toast.success("Budget Request Success", {
-            position: "top-center",
-            autoClose: 3000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-          });
-        })
-        .finally(() => dispatch(setLoading(false)));
+        dispatch(addBudget(response.data));
+        dispatch(toggleModalFormDetail(false));
+        toast.success("Budget Request Success", {
+          position: "top-center",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
     } catch (error) {
       dispatch(setError(error));
+      if (error.response) {
+          // Request made and server responded
+          toast.error(`${error.response.data.message}`, {
+              position: "top-center",
+              autoClose: 5000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+          });
+          console.log(error.response.data);
+          console.log(error.response.status);
+          console.log(error.response.headers);
+      } else if (error.request) {
+          // The request was made but no response was received
+          console.log(error.request);
+      } else {
+          // Something happened in setting up the request that triggered an Error
+          console.log('Error', error.message);
+      }
+    } finally {
+      dispatch(setLoading(false))
     }
   };
 }
