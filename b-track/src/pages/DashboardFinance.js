@@ -51,7 +51,7 @@ export default function DashboardFinance() {''
       );
       sorted?.map((el) => {
         label.push(format(new Date(el.date), "d MMM yy"));
-        data.push(el.amount);
+        data.push(el.initial_amount);
       });
       // transactions?.Transactions.map((el) => {
       //   label.push(getDate(el.date));
