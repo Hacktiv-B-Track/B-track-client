@@ -2,6 +2,7 @@ import Modal from "react-modal";
 import { useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import { toast } from "react-toastify";
 import {
   toggleModalFormDetail,
   fetchTransaction,
@@ -20,7 +21,7 @@ const customStyles = {
     top: "15%",
     left: "15%",
     right: "15%",
-    bottom: "15%",
+    bottom: "30%",
     marginRight: "10%",
     marginLeft: "10%",
     // transform: "translate(-50%, -50%)",
@@ -69,17 +70,29 @@ export default function FormTransactionModal(props) {
   const scanFile = (e) => {
     e.preventDefault();
     e.stopPropagation();
-    const formData = new FormData();
-    formData.append("invoice-file", file);
-    setLoading(true);
-    dispatch(fetchScanInvoice(formData))
-      .then((res) => {
-        setPrice(res.totalInvoice);
-        setNamePrice(idrCurrency(res.totalInvoice));
-        setImageUrl(res.invoiceUrl);
-        setLoading(false);
-      })
-      .catch((err) => console.log(err));
+    if (file) {
+      const formData = new FormData();
+      formData.append("invoice-file", file);
+      setLoading(true);
+      dispatch(fetchScanInvoice(formData))
+        .then((res) => {
+          setPrice(res.totalInvoice);
+          setNamePrice(idrCurrency(res.totalInvoice));
+          setImageUrl(res.invoiceUrl);
+          setLoading(false);
+        })
+        .catch((err) => console.log(err));
+    } else {
+      toast.error(`Please choose file first`, {
+        position: "top-center",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    }
   };
 
   const submitHandler = (e) => {
@@ -186,7 +199,7 @@ export default function FormTransactionModal(props) {
                   onChange={(e) => setCategory(e.target.value)}
                 >
                   <option value="" selected disabled>
-                    --SELECT CATEGORY--
+                    Select Category
                   </option>
 
                   {categories.map((el) => {
@@ -250,17 +263,55 @@ export default function FormTransactionModal(props) {
 
             <div className="flex flex-col-reverse mt-5 text-right md:space-x-3 md:block">
               <button
-                className="px-5 py-2 mb-2 text-sm font-medium tracking-wider text-gray-600 bg-white border rounded-full shadow-sm md:mb-0 hover:shadow-lg hover:bg-gray-100"
+                className="px-3 py-2 text-red-500 transition duration-300 border border-red-500 rounded hover:bg-red-700 hover:text-white focus:outline-none"
                 onClick={closeModal}
               >
-                Cancel
+                <div className="flex items-center">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="w-5 h-5 mr-1 -ml-1"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
+                    />
+                  </svg>
+                  <span>Cancel</span>
+                </div>
               </button>
               <button
+                className="px-3 py-2 text-blue-500 transition duration-300 border border-blue-500 rounded hover:bg-blue-700 hover:text-white focus:outline-none"
+                type="submit"
+              >
+                <div className="flex items-center">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="w-5 h-5 mr-1 -ml-1"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"
+                    />
+                  </svg>
+                  <span>Save</span>
+                </div>
+              </button>
+              {/* <button
                 type="submit"
                 className="px-5 py-2 mb-2 text-sm font-medium tracking-wider text-white bg-green-400 rounded-full shadow-sm md:mb-0 hover:shadow-lg hover:bg-green-500"
               >
                 Save
-              </button>
+              </button> */}
             </div>
           </form>
         </div>
