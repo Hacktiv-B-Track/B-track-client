@@ -15,7 +15,7 @@ import LineChartTransaction from "../components/LineChartTransaction";
 import FormTransactionModal from "../components/FormTransactionModal";
 import InvoiceModal from "../components/InvoiceModal";
 import { idrCurrency } from "../helpers/currency";
-import { getDate, getFullYear, getShortMonth } from "../helpers/getDate";
+import { getDate, getFinalDate } from "../helpers/getDate";
 import generatePDF from "../helpers/reportGenerator";
 
 export default function BudgetDetail() {
@@ -37,7 +37,6 @@ export default function BudgetDetail() {
     //! mapping buat chart
     let label = [];
     let data = [];
-    console.log(transactions,'------data');
     const sorted = transactions?.Transactions?.sort(
       (a, b) => new Date(a.date) - new Date(b.date)
     );
@@ -170,13 +169,13 @@ export default function BudgetDetail() {
             <div className="stat">
               <div className="text-xl stat-title">Requested Date</div>
               <div className="text-lg stat-value">
-                {getDate(transactions.date)}
+                {getFinalDate(transactions.date)}
               </div>
             </div>
             <div className="stat">
               <div className="stat-title">Due Date</div>
               <div className="text-xl stat-value">
-                {getDate(transactions.due_date)}
+                {getFinalDate(transactions.due_date)}
               </div>
             </div>
           </div>
