@@ -13,6 +13,7 @@ import {
   FETCH_BUDGET_DETAIL,
   ADD_BUDGET,
   ADD_CATEGORIES,
+  SET_REFRESH
 } from "./actionType";
 
 const initialState = {
@@ -29,6 +30,7 @@ const initialState = {
   budgets: [],
   budgetDetail: [],
   categories: [],
+  refresh:0
 };
 
 export default function reducer(state = initialState, action) {
@@ -102,6 +104,11 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         categories: action.payload,
+      };
+    case SET_REFRESH:
+      return {
+        ...state,
+        refresh: state.refresh + action.payload,
       };
 
     default:

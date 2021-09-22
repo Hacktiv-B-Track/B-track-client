@@ -12,6 +12,7 @@ export default function DashboardDepartment() {
   const dispatch = useDispatch();
   const [DepartmentId] = useState(localStorage.getItem("DepartmentId"));
   const [DepartmentName] = useState(localStorage.getItem("DepartmentName"));
+  const [role] = useState(localStorage.getItem("role"));
   const budgets = useSelector((state) => state.budgets);
   let history = useHistory();
 
@@ -50,37 +51,29 @@ export default function DashboardDepartment() {
                 </div>
               </div>
 
-              <button
+              {role === 'manager_department' && (<button
                 className="px-5 py-2 mb-10 text-blue-500 transition duration-300 border border-blue-500 rounded hover:bg-blue-700 hover:text-white focus:outline-none"
                 onClick={showModal}
               >
                 Request New Budget
-              </button>
+              </button>)}
+              
               {/* Departemen Head */}
 
               {/* Departemen Body */}
               <div className="grid grid-cols-4 gap-4">
                 {budgets.map((budget) => {
                   return (
-                    <div
-                      onClick={(e) => handleClick(budget.id)}
-                      key={budget.id}
-                      className="p-4 border-4 group hover:bg-white hover:shadow-lg hover:border-invisible cursor-pointer"
-                    >
-                      <div className="p-6 bg-white rounded-lg">
-                        <h2 className="mb-4 text-lg font-medium text-center text-gray-900">
-                          {budget.name}
-                        </h2>
-                        <PieChart
-                          data={{
-                            amount: budget.amount,
-                            initial: budget.initial_amount,
-                          }}
-                        />
-                        <p className="mt-2 font-medium text-center">
-                          status: {budget.status}
-                        </p>
-                      </div>
+                    <div onClick={e=>handleClick(budget.id)} key={budget.id} className="p-4 border-4 group hover:bg-white hover:shadow-lg hover:border-invisible cursor-pointer">
+                        <div className="p-6 bg-white flex flex-col items-center rounded-lg">
+                            <h2 className="mb-4 text-lg font-medium text-center text-gray-900">
+                            {budget.name}
+                            </h2>
+                            <PieChart data={{amount:budget.amount, initial:budget.initial_amount}} />
+                            {budget.status === 'Unapproved' && (<p className='mt-2 text-base font-medium text-center badge badge-warning'>{budget.status}</p>)}
+                            {budget.status === 'Approved' && (<p className='mt-2 text-base font-medium text-center badge badge-success'>{budget.status}</p>)}
+                            {budget.status === 'Rejected' && (<p className='mt-2 text-base font-medium text-center badge badge-error'>{budget.status}</p>)}
+                        </div>
                     </div>
                   );
                 })}

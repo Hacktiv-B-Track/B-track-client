@@ -14,6 +14,7 @@ import {
   FETCH_BUDGET_DETAIL,
   ADD_BUDGET,
   ADD_CATEGORIES,
+  SET_REFRESH
 } from "./actionType";
 import { toast } from "react-toastify";
 
@@ -41,6 +42,13 @@ function setError(payload) {
 function setLoading(payload) {
   return {
     type: SET_LOADING,
+    payload,
+  };
+}
+
+function setRefresh(payload) {
+  return {
+    type: SET_REFRESH,
     payload,
   };
 }
@@ -166,31 +174,59 @@ export function fetchBudgetsFinance() {
     }
   };
 }
-// function setBudgetDetail(payload) {
-//   return {
-//       type : FETCH_BUDGET_DETAIL,
-//       payload
-//   }
-// }
 
-// export function fetchBudgetDetail({budgetId}) {
-//   return async function (dispatch, getState) {
-//       try {
-//           dispatch(setLoading(true))
-//           axios.get('/budgets/'+ budgetId, {
-//             headers:{
-//               access_token:localStorage.getItem('access_token')
-//             }
-//           })
-//           .then((response) => {
-//             dispatch(setBudgetDetail(response.data))
-//           })
-//           .finally(() => dispatch(setLoading(false)))
-//       } catch (error) {
-//           dispatch(setError(error))
-//       }
-//   }
-// }
+export function EditBudget({amount, date, due_date, status, budgetId}) {
+  return async function (dispatch, getState) {
+    try {
+        dispatch(setLoading(true))
+        const response = await axios.put('/budgets/' + budgetId,{
+          amount, date, due_date, status
+        }, 
+        {
+          headers:{
+            access_token:localStorage.getItem('access_token')
+          }
+        })
+        dispatch(setRefresh(1))
+        dispatch(toggleModalFormDetail(false))
+        toast.success("Status Edited", {
+          position: "top-center",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+    } catch (error) {
+      console.log('error');
+        dispatch(setError(error))
+        if (error.response) {
+            // Request made and server responded
+            toast.error(`${error.response.data.message}`, {
+                position: "top-center",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+            });
+            console.log(error.response.data);
+            console.log(error.response.status);
+            console.log(error.response.headers);
+        } else if (error.request) {
+            // The request was made but no response was received
+            console.log(error.request);
+        } else {
+            // Something happened in setting up the request that triggered an Error
+            console.log('Error', error.message);
+        }
+    } finally {
+      dispatch(setLoading(false))
+    }
+  }
+}
 
 export function requestBudget({
   name,
@@ -403,3 +439,29 @@ export function scanInvoice(payload) {
     payload: payload,
   };
 }
+
+// function setBudgetDetail(payload) {
+//   return {
+//       type : FETCH_BUDGET_DETAIL,
+//       payload
+//   }
+// }
+
+// export function fetchBudgetDetail({budgetId}) {
+//   return async function (dispatch, getState) {
+//       try {
+//           dispatch(setLoading(true))
+//           axios.get('/budgets/'+ budgetId, {
+//             headers:{
+//               access_token:localStorage.getItem('access_token')
+//             }
+//           })
+//           .then((response) => {
+//             dispatch(setBudgetDetail(response.data))
+//           })
+//           .finally(() => dispatch(setLoading(false)))
+//       } catch (error) {
+//           dispatch(setError(error))
+//       }
+//   }
+// }
