@@ -51,15 +51,17 @@ export default function Register() {
         .catch(error=>{
             if (error.response) {
                 // Request made and server responded
-                toast.error(`${error.response.data.message}`, {
+                error.response.data.message.map((err) =>
+                    toast.error(err, {
                     position: "top-center",
-                    autoClose: 5000,
+                    autoClose: 3000,
                     hideProgressBar: false,
                     closeOnClick: true,
                     pauseOnHover: true,
                     draggable: true,
                     progress: undefined,
-                });
+                    })
+                );
                 console.log(error.response.data);
                 console.log(error.response.status);
                 console.log(error.response.headers);
