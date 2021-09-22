@@ -31,10 +31,12 @@ export default function DashboardFinance() {''
       }, [refresh])
 
     useEffect(() => {
-      let arrayBudget = budgets.map(el=>el.initial_amount)
-      let arraySpent = budgets.map(el=>el.amount)
-      setTotalBudget(arrayBudget.reduce(reducer)) 
-      setTotalSpent(totalBudget-arraySpent.reduce(reducer))
+      let arrayBudget = budgets?.map(el=>el.initial_amount)
+      let arraySpent = budgets?.map(el=>el.amount)
+      if(arrayBudget.length) {
+        setTotalBudget(arrayBudget.reduce(reducer)) 
+        if (arraySpent.length) setTotalSpent(arrayBudget.reduce(reducer)-arraySpent.reduce(reducer))
+      }
     }, [budgets])
 
     function handleClick({budgetId, status, name, amount, date, due_date}) {
