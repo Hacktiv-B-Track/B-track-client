@@ -14,7 +14,7 @@ import {
   FETCH_BUDGET_DETAIL,
   ADD_BUDGET,
   ADD_CATEGORIES,
-  SET_REFRESH
+  SET_REFRESH,
 } from "./actionType";
 import { toast } from "react-toastify";
 
@@ -111,7 +111,6 @@ export function addTransaction(payload) {
   };
 }
 
-
 export function addCategories(payload) {
   return {
     type: ADD_CATEGORIES,
@@ -133,7 +132,6 @@ export const fetchCategories = () => {
     }
   };
 };
-
 
 export function fetchBudgets({ DepartmentId }) {
   return async function (dispatch, getState) {
@@ -175,122 +173,121 @@ export function fetchBudgetsFinance() {
   };
 }
 
-export function EditBudget({amount, date, due_date, status, budgetId}) {
-  return async function (dispatch, getState) {
-    try {
-        dispatch(setLoading(true))
-        const response = await axios.put('/budgets/' + budgetId,{
-          amount, date, due_date, status
-        }, 
-        {
-          headers:{
-            access_token:localStorage.getItem('access_token')
-          }
-        })
-        dispatch(setRefresh(1))
-        dispatch(toggleModalFormDetail(false))
-        toast.success("Status Edited", {
-          position: "top-center",
-          autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-        });
-    } catch (error) {
-        dispatch(setError(error))
-        if (error.response) {
-            // Request made and server responded
-            toast.error(`${error.response.data.message}`, {
-                position: "top-center",
-                autoClose: 5000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-            });
-            console.log(error.response.data);
-            console.log(error.response.status);
-            console.log(error.response.headers);
-        } else if (error.request) {
-            // The request was made but no response was received
-            console.log(error.request);
-        } else {
-            // Something happened in setting up the request that triggered an Error
-            console.log('Error', error.message);
-        }
-    } finally {
-      dispatch(setLoading(false))
-    }
-  }
-}
-
-export function requestBudget({
-  name,
-  amount,
-  date,
-  due_date,
-}) {
+export function EditBudget({ amount, date, due_date, status, budgetId }) {
   return async function (dispatch, getState) {
     try {
       dispatch(setLoading(true));
-      const response = await axios
-        .post(
-          "/budgets",
-          {
-            name,
-            amount,
-            date,
-            due_date,
+      const response = await axios.put(
+        "/budgets/" + budgetId,
+        {
+          amount,
+          date,
+          due_date,
+          status,
+        },
+        {
+          headers: {
+            access_token: localStorage.getItem("access_token"),
           },
-          {
-            headers: {
-              access_token: localStorage.getItem("access_token"),
-            },
-          }
-        )
-        dispatch(addBudget(response.data));
-        dispatch(toggleModalFormDetail(false));
-        toast.success("Budget Request Success", {
+        }
+      );
+      dispatch(setRefresh(1));
+      dispatch(toggleModalFormDetail(false));
+      toast.success("Status Edited", {
+        position: "top-center",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    } catch (error) {
+      dispatch(setError(error));
+      if (error.response) {
+        // Request made and server responded
+        toast.error(`${error.response.data.message}`, {
           position: "top-center",
-          autoClose: 3000,
+          autoClose: 5000,
           hideProgressBar: false,
           closeOnClick: true,
           pauseOnHover: true,
           draggable: true,
           progress: undefined,
         });
-    } catch (error) {
-      dispatch(setError(error));
-      if (error.response) {
-          // Request made and server responded
-          toast.error(`${error.response.data.message}`, {
-              position: "top-center",
-              autoClose: 5000,
-              hideProgressBar: false,
-              closeOnClick: true,
-              pauseOnHover: true,
-              draggable: true,
-              progress: undefined,
-          });
-          console.log(error.response.data);
-          console.log(error.response.status);
-          console.log(error.response.headers);
+        console.log(error.response.data);
+        console.log(error.response.status);
+        console.log(error.response.headers);
       } else if (error.request) {
-          // The request was made but no response was received
-          console.log(error.request);
+        // The request was made but no response was received
+        console.log(error.request);
       } else {
-          // Something happened in setting up the request that triggered an Error
-          console.log('Error', error.message);
+        // Something happened in setting up the request that triggered an Error
+        console.log("Error", error.message);
       }
     } finally {
-      dispatch(setLoading(false))
+      dispatch(setLoading(false));
     }
   };
 }
 
+export function requestBudget({ name, amount, date, due_date }) {
+  return async function (dispatch, getState) {
+    try {
+      dispatch(setLoading(true));
+      const response = await axios.post(
+        "/budgets",
+        {
+          name,
+          amount,
+          date,
+          due_date,
+        },
+        {
+          headers: {
+            access_token: localStorage.getItem("access_token"),
+          },
+        }
+      );
+      dispatch(addBudget(response.data));
+      dispatch(toggleModalFormDetail(false));
+      toast.success("Budget Request Success", {
+        position: "top-center",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    } catch (error) {
+      dispatch(setError(error));
+      if (error.response) {
+        // Request made and server responded
+        toast.error(`${error.response.data.message}`, {
+          position: "top-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+        console.log(error.response.data);
+        console.log(error.response.status);
+        console.log(error.response.headers);
+      } else if (error.request) {
+        // The request was made but no response was received
+        console.log(error.request);
+      } else {
+        // Something happened in setting up the request that triggered an Error
+        console.log("Error", error.message);
+      }
+    } finally {
+      dispatch(setLoading(false));
+    }
+  };
+}
 
 export const fetchTransactions = (budgetId) => {
   return async (dispatch, getState) => {
@@ -352,8 +349,20 @@ export const postTransaction = (payload, budgetId) => {
         progress: undefined,
       });
     } catch (error) {
-      error.response.data.message.map((err) =>
-        toast.error(err, {
+      if (Array.isArray(error.response.data.message)) {
+        error.response.data.message.map((err) =>
+          toast.error(err, {
+            position: "top-center",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+          })
+        );
+      } else {
+        toast.error(error.response.data.message, {
           position: "top-center",
           autoClose: 3000,
           hideProgressBar: false,
@@ -361,8 +370,8 @@ export const postTransaction = (payload, budgetId) => {
           pauseOnHover: true,
           draggable: true,
           progress: undefined,
-        })
-      );
+        });
+      }
     }
   };
 };
@@ -378,7 +387,7 @@ export const editTransaction = (payload, transactionId, budgetId) => {
       });
       dispatch(fetchTransactions(budgetId));
       dispatch(toggleModalFormDetail(false));
-      toast.success("Success adding transaction", {
+      toast.success("Success edit transaction", {
         position: "top-center",
         autoClose: 3000,
         hideProgressBar: false,
@@ -388,8 +397,20 @@ export const editTransaction = (payload, transactionId, budgetId) => {
         progress: undefined,
       });
     } catch (error) {
-      error.response.data.message.map((err) =>
-        toast.error(err, {
+      if (Array.isArray(error.response.data.message)) {
+        error.response.data.message.map((err) =>
+          toast.error(err, {
+            position: "top-center",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+          })
+        );
+      } else {
+        toast.error(error.response.data.message, {
           position: "top-center",
           autoClose: 3000,
           hideProgressBar: false,
@@ -397,8 +418,8 @@ export const editTransaction = (payload, transactionId, budgetId) => {
           pauseOnHover: true,
           draggable: true,
           progress: undefined,
-        })
-      );
+        });
+      }
     }
   };
 };

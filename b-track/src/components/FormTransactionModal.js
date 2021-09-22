@@ -41,6 +41,7 @@ export default function FormTransactionModal(props) {
   const [category, setCategory] = useState("");
   const [imageUrl, setImageUrl] = useState("");
   const [loading, setLoading] = useState(false);
+  const [isScan, setIsScan] = useState("");
 
   useEffect(async () => {
     dispatch(fetchCategories());
@@ -51,6 +52,7 @@ export default function FormTransactionModal(props) {
           setNamePrice(idrCurrency(res.amount));
           setName(res.name);
           setFile(res.invoice);
+          setImageUrl(res.invoice);
           setDate(editFormDate(res.date));
           setCategory(res.Category.id);
         })
@@ -74,12 +76,14 @@ export default function FormTransactionModal(props) {
       const formData = new FormData();
       formData.append("invoice-file", file);
       setLoading(true);
+      setIsScan("disabled");
       dispatch(fetchScanInvoice(formData))
         .then((res) => {
           setPrice(res.totalInvoice);
           setNamePrice(idrCurrency(res.totalInvoice));
           setImageUrl(res.invoiceUrl);
           setLoading(false);
+          setIsScan("");
         })
         .catch((err) => console.log(err));
     } else {
@@ -107,10 +111,10 @@ export default function FormTransactionModal(props) {
       date: newDate,
       amount: price,
       CategoryId: category,
-      // invoice: imageUrl,
+      invoice: imageUrl,
       //! testing add, biar irit OCR
-      invoice:
-        "https://ik.imagekit.io/ddtyiwgu4rm/invoice-kledo-1_pHFD1g4Hv.jpg",
+      // invoice:
+      //   "https://ik.imagekit.io/ddtyiwgu4rm/invoice-kledo-1_pHFD1g4Hv.jpg",
     };
     if (props.id) {
       dispatch(editTransaction(data, props.id, budgetId));
@@ -152,6 +156,7 @@ export default function FormTransactionModal(props) {
                   className="block w-full h-10 px-4 border rounded-lg appearance-none bg-grey-lighter text-grey-darker border-grey-lighter"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
+                  disabled={isScan}
                 />
               </div>
             </div>
@@ -167,6 +172,7 @@ export default function FormTransactionModal(props) {
                   className="w-1/2 h-10 px-4 border rounded-lg appearance-none bg-grey-lighter text-grey-darker border-grey-lighter"
                   value={price}
                   onChange={(e) => priceHandler(e.target.value)}
+                  disabled={isScan}
                 />
                 <label className="py-2 ml-2 font-semibold text-gray-600">
                   {namePrice}
@@ -185,6 +191,7 @@ export default function FormTransactionModal(props) {
                   className="w-full h-10 px-4 border rounded-lg appearance-none bg-grey-lighter text-grey-darker border-grey-lighter"
                   value={date}
                   onChange={(e) => setDate(e.target.value)}
+                  disabled={isScan}
                 />
               </div>
 
@@ -197,6 +204,7 @@ export default function FormTransactionModal(props) {
                   className="w-full h-10 px-4 border rounded-lg appearance-none bg-grey-lighter text-grey-darker border-grey-lighter"
                   value={category}
                   onChange={(e) => setCategory(e.target.value)}
+                  disabled={isScan}
                 >
                   <option value="" selected disabled>
                     Select Category
@@ -224,6 +232,7 @@ export default function FormTransactionModal(props) {
                     <input
                       type="file"
                       onChange={(e) => setFile(e.target.files[0])}
+                      disabled={isScan}
                     />
                   </div>
                 </div>
@@ -236,6 +245,7 @@ export default function FormTransactionModal(props) {
                     <button
                       className="px-5 py-2 mb-2 text-sm font-medium tracking-wider text-gray-600 bg-white border rounded-full shadow-sm md:mb-0 hover:shadow-lg hover:bg-gray-100"
                       onClick={(e) => scanFile(e)}
+                      disabled={isScan}
                     >
                       Scan File
                     </button>
