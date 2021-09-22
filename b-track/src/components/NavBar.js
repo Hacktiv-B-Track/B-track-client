@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useHistory } from "react-router";
-import Logo from "../assets/images/logo.png";
+import Logo from "../assets/images/logo_navbar.png";
 
 export default function NavBar() {
   const [username] = useState(localStorage.getItem("username"));
@@ -17,11 +17,8 @@ export default function NavBar() {
 
   return (
     <>
-      <div className="mb-2 bg-indigo-300 shadow-lg navbar text-neutral-content">
-        <div
-          onClick={(e) => goHome()}
-          className="flex-none hidden lg:flex"
-        ></div>
+      <div className="mb-2 bg-blue-500 shadow-lg navbar text-neutral-content">
+        <div className="flex-none hidden lg:flex"></div>
         <div className="flex-1 hidden px-2 mx-2 lg:flex">
           <img
             src={Logo}
@@ -29,14 +26,20 @@ export default function NavBar() {
             alt="logo"
             onClick={goHome}
           />
+          <span
+            className="ml-3 text-3xl font-bold cursor-pointer"
+            onClick={goHome}
+          >
+            B-TRACK
+          </span>
         </div>
-        <div className="flex-none bg-indigo-300 border-none hover:bg-indigo-300">
-          <div className="bg-indigo-300 border-none dropdown dropdown-end hover:bg-indigo-300">
+        <div className="flex-none bg-blue-500 border-none hover:bg-blue-500">
+          <div className="bg-blue-500 border-none dropdown dropdown-end hover:bg-blue-500">
             <div
               tabIndex="0"
-              className="m-1 bg-indigo-300 border-none btn hover:bg-indigo-300"
+              className="m-1 bg-blue-500 border-none btn hover:bg-blue-500"
             >
-              <p className="mx-2 text-lg font-bold bg-indigo-300 hover:bg-indigo-300">
+              <p className="mx-2 text-lg font-bold bg-blue-500 hover:bg-blue-500">
                 {username}
               </p>
               <svg

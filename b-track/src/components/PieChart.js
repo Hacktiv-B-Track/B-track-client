@@ -8,7 +8,7 @@ const options = {
   //! Tooltip & legend gak jalan
 };
 
-export default function PieChart({data}) {
+export default function PieChart({ data }) {
   return (
     <>
       <Pie
@@ -17,10 +17,7 @@ export default function PieChart({data}) {
           datasets: [
             {
               data: [data.initial - data.amount, data.amount],
-              backgroundColor: [
-                "rgba(255,0,0,0.3)",
-                "rgba(0,0,255,0.3)",
-              ],
+              backgroundColor: ["#F87171", "#60A5FA"],
             },
           ],
         }}
