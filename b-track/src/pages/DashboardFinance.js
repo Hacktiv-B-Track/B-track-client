@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
 import PieChart from "../components/PieChart";
 import LineChart from "../components/LineChart";
+import LineChartTransaction from "../components/LineChartTransaction";
 import { fetchBudgetsFinance, fetchDepartments, toggleModalFormDetail } from "../store/action";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router";
 import FormApproveModal from '../components/FormApproveModal'
 import { idrCurrency } from "../helpers/currency";
+import { format } from "date-fns";
 
 export default function DashboardFinance() {''
     const dispatch = useDispatch()
@@ -14,7 +16,8 @@ export default function DashboardFinance() {''
     const [amount, setAmount] = useState(0)
     const [date, setDate] = useState(new Date().toISOString().slice(0, 10))
     const [due_date, setDueDate] = useState(new Date().toISOString().slice(0, 10))
-    const [role] = useState(localStorage.getItem("role"));
+    const [lineLabel, setLineLabel] = useState([]);
+    const [lineData, setLineData] = useState([]);
     const [totalBudget, setTotalBudget] = useState([])
     const [totalSpent, setTotalSpent] = useState([])
     const budgets = useSelector(state => state.budgets)
@@ -38,6 +41,32 @@ export default function DashboardFinance() {''
         if (arraySpent.length) setTotalSpent(arrayBudget.reduce(reducer)-arraySpent.reduce(reducer))
       }
     }, [budgets])
+
+    useEffect(() => {
+      //! mapping buat chart
+      let label = [];
+      let data = [];
+      const sorted = budgets?.sort(
+        (a, b) => new Date(a.date) - new Date(b.date)
+      );
+      sorted?.map((el) => {
+        label.push(format(new Date(el.date), "d MMM yy"));
+        data.push(el.amount);
+      });
+      // transactions?.Transactions.map((el) => {
+      //   label.push(getDate(el.date));
+      //   data.push(el.amount);
+      // });
+      let dataSets = {
+        label: "Budget Requested",
+        data: data,
+        fill: true,
+        backgroundColor: "rgb(255, 99, 132)",
+        borderColor: "rgba(255, 99, 132, 0.2)",
+      };
+      setLineLabel(label);
+      setLineData(dataSets);
+    }, [budgets]);
 
     function handleClick({budgetId, status, name, amount, date, due_date}) {
       if (status === 'Approved') {
@@ -94,16 +123,19 @@ export default function DashboardFinance() {''
               <div className="flex-col p-5 border">
                 {/* Chart */}
                 <div className='grid grid-cols-3 gap-2 mb-5 border-2'>
-                  <div className="col-span-2">
-                    <LineChart/>
-                  </div>
+                {/* <div className="col-span-2">
+                  <LineChart
+                  />
+                </div> */}
+                <div className="col-span-2">
+                  <LineChartTransaction
+                    data={{ labels: lineLabel, datasets: [lineData] }}
+                  />
+                </div>
 
                   <div className="grid-flow-row shadow stats">
                     <div className="stat">
-                      <div className="text-xl stat-title">Total Spending</div>
-                      <div className="text-xl stat-value">
-                        {idrCurrency(totalSpent)}
-                        <span className="ml-1 stat-desc text-success">
+                      <div className="text-4xl stat-title">Total Spending <span className="ml-3 text-xl font-bold text-blue-700 ">
                           (
                             {parseFloat(
                               (totalSpent /
@@ -111,12 +143,15 @@ export default function DashboardFinance() {''
                                 100
                             ).toFixed(2)}
                           %)
-                        </span>
+                        </span></div>
+                        
+                      <div className="text-2xl stat-value">
+                        {idrCurrency(totalSpent)}
                       </div>
                     </div>
                     <div className="stat">
-                      <div className="text-xl stat-title">Total Budget</div>
-                      <div className="text-xl stat-value">
+                      <div className="text-4xl stat-title">Total Budget</div>
+                      <div className="text-2xl stat-value">
                          {idrCurrency(totalBudget)}
                       </div>
                     </div>
