@@ -53,10 +53,6 @@ export default function FormTransactionModal(props) {
           setName(res.name);
           setFile(res.invoice);
           setImageUrl(res.invoice);
-          console.log(
-            "🚀 ~ file: FormTransactionModal.js ~ line 55 ~ .then ~ res.invoice",
-            res.invoice
-          );
           setDate(editFormDate(res.date));
           setCategory(res.Category.id);
         })
