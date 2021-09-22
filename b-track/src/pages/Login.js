@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
-import axios from "../apis/server";
+import axios from "../apis/axios";
 import { toast } from "react-toastify";
 import logo from "../assets/images/logo.png";
 export default function Login() {
