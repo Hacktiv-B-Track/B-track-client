@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import axios from "../apis/server";
+import axios from "../apis/axios";
 import { toast } from "react-toastify";
 import { useEffect } from "react";
 import { fetchDepartments } from "../store/action";
