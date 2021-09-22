@@ -1,17 +1,26 @@
 import React from "react";
 import PieChart from "../components/PieChart";
-import { fetchBudgets, toggleModalFormDetail } from "../store/action";
+import { fetchBudgets, toggleModalDelete, toggleModalFormDetail } from "../store/action";
 import { useDispatch, useSelector } from "react-redux";
 import FormBudgetModal from "../components/FormBudgetModal";
 import InvoiceModal from "../components/InvoiceModal";
 import { useEffect } from "react";
 import { useState } from "react";
 import { useHistory } from "react-router";
+import FormDeleteModal from "../components/DeleteModal";
 
 export default function DashboardDepartment() {
   const dispatch = useDispatch();
+  const refresh = useSelector(state => state.refresh)
   const [DepartmentId] = useState(localStorage.getItem("DepartmentId"));
   const [DepartmentName] = useState(localStorage.getItem("DepartmentName"));
+  const [id, setId] = useState(null);
+  const [budgetName, setBudgetName] = useState("");
+  const [amount, setAmount] = useState(0);
+  const [date, setDate] = useState(new Date().toISOString().slice(0, 10));
+  const [due_date, setDueDate] = useState(
+    new Date().toISOString().slice(0, 10)
+  );
   const [role] = useState(localStorage.getItem("role"));
   const budgets = useSelector((state) => state.budgets);
   const loading = useSelector((state) => state.loading);
@@ -19,14 +28,31 @@ export default function DashboardDepartment() {
 
   useEffect(() => {
     dispatch(fetchBudgets({ DepartmentId }));
-  }, []);
+  }, [refresh]);
 
   const showModal = () => {
     dispatch(toggleModalFormDetail(true));
   };
 
-  function handleClick(budgetId) {
+  const showDeleteModal = ({ id, name, amount, date, due_date }) => {
+    setId(id);
+    setBudgetName(name);
+    setAmount(amount);
+    setDate(date.slice(0, 10));
+    setDueDate(due_date.slice(0, 10));
+    dispatch(toggleModalDelete(true));
+  };
+
+  function handleApproved(budgetId) {
     history.push("/budget/" + budgetId);
+  }
+
+  function handleOnClick({status, id, name, amount, date, due_date}) {
+    if (status === 'Approved') {
+      handleApproved(id)
+    }else if (status === 'Rejected' && role === 'manager_department') {
+      showDeleteModal({ id, name, amount, date, due_date })
+    }
   }
 
   if (loading) {
@@ -48,6 +74,13 @@ export default function DashboardDepartment() {
       <div className="max-w-full max-h-full min-h-screen">
         <div className="container mx-auto">
           <FormBudgetModal name="add" />
+          <FormDeleteModal
+            id={id}
+            name={budgetName}
+            amount={amount}
+            date={date}
+            due_date={due_date}
+          />
           <InvoiceModal image="https://images.unsplash.com/photo-1628191137573-dee64e727614?ixid=MnwxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80" />
 
           {/* Department Dashboard */}
@@ -77,7 +110,14 @@ export default function DashboardDepartment() {
                 {budgets.map((budget) => {
                   return (
                     <div 
-                        onClick={()=>budget.status !== 'Rejected' && budget.status !== 'Unapproved' && handleClick(budget.id) || null}
+                        onClick={()=>handleOnClick({
+                          id: budget.id,
+                          status: budget.status,
+                          name: budget.name,
+                          amount: budget.amount,
+                          date: budget.date,
+                          due_date: budget.due_date,
+                        })}
                         key={budget.id} 
                         className="p-4 border-4 group hover:bg-white hover:shadow-lg hover:border-invisible cursor-pointer"
                         >

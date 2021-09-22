@@ -1,6 +1,7 @@
 import axios from "../apis/axios";
 import {
   TOGGLE_MODAL_FORM_DETAIL,
+  TOGGLE_MODAL_DELETE,
   TOGGLE_MODAL_IMAGE,
   ADD_TRANSACTIONS,
   ADD_MODAL_IMAGE_URL,
@@ -21,6 +22,13 @@ import { toast } from "react-toastify";
 export function toggleModalFormDetail(payload) {
   return {
     type: TOGGLE_MODAL_FORM_DETAIL,
+    payload: payload,
+  };
+}
+
+export function toggleModalDelete(payload) {
+  return {
+    type: TOGGLE_MODAL_DELETE,
     payload: payload,
   };
 }
@@ -149,6 +157,55 @@ export function fetchBudgets({ DepartmentId }) {
         .finally(() => dispatch(setLoading(false)));
     } catch (error) {
       dispatch(setError(error));
+    }
+  };
+}
+
+export function deleteBudget({ id }) {
+  return async function (dispatch, getState) {
+    try {
+      dispatch(setLoading(true));
+      const response = await axios.delete("/budgets/" + id, {
+          headers: {
+            access_token: localStorage.getItem("access_token"),
+          },
+      })
+      toast.success(response.data.message, {
+        position: "top-center",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+      dispatch(setRefresh(1))
+      dispatch(toggleModalDelete(false))
+    } catch (error) {
+      dispatch(setError(error));
+      if (error.response) {
+        // Request made and server responded
+        toast.error(`${error.response.data.message}`, {
+          position: "top-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+        console.log(error.response.data);
+        console.log(error.response.status);
+        console.log(error.response.headers);
+      } else if (error.request) {
+        // The request was made but no response was received
+        console.log(error.request);
+      } else {
+        // Something happened in setting up the request that triggered an Error
+        console.log("Error", error.message);
+      }
+    } finally {
+      dispatch(setLoading(false))
     }
   };
 }
