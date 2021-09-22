@@ -29,6 +29,8 @@ export default function Register() {
       } else if (role === "staff_department") {
         setRole("staff_finance");
       }
+    }
+  }, [department, role]);
 
     function handleSubmit(e) {
         e.preventDefault()
@@ -72,9 +74,7 @@ export default function Register() {
                 console.log('Error', error.message);
             }   
         })
-
-    }
-  }, [department, role]);
+      }
 
   function handleSubmit(e) {
     e.preventDefault();
