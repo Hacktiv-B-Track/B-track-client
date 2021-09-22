@@ -397,8 +397,20 @@ export const editTransaction = (payload, transactionId, budgetId) => {
         progress: undefined,
       });
     } catch (error) {
-      error.response.data.message.map((err) =>
-        toast.error(err, {
+      if (Array.isArray(error.response.data.message)) {
+        error.response.data.message.map((err) =>
+          toast.error(err, {
+            position: "top-center",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+          })
+        );
+      } else {
+        toast.error(error.response.data.message, {
           position: "top-center",
           autoClose: 3000,
           hideProgressBar: false,
@@ -406,8 +418,8 @@ export const editTransaction = (payload, transactionId, budgetId) => {
           pauseOnHover: true,
           draggable: true,
           progress: undefined,
-        })
-      );
+        });
+      }
     }
   };
 };

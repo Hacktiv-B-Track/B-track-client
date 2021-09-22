@@ -185,12 +185,12 @@ export default function Register() {
   return (
     <>
       <div className="flex items-center justify-center min-h-screen bg-blue-500 min-w-screen">
-        <div className="w-6/12 bg-white rounded-lg h-70v">
+        <div className="w-6/12 bg-white rounded-lg">
           <div className="flex flex-col items-center justify-center h-full px-3 ">
             {/* Logo */}
-            <div className="flex flex-col items-center w-full space-x-16">
-              <img className="w-1/4 ml-12" src={Logo} alt="" />
-              <p className="mb-8 text-5xl text-blue-500 ">Register</p>
+            <div className="flex flex-col items-center w-full mt-10">
+              <img className="w-1/4 " src={Logo} alt="" />
+              <p className="mt-10 mb-8 text-5xl text-blue-500 ">Register</p>
             </div>
 
             <form onSubmit={handleSubmit} className="flex flex-col w-full">
@@ -255,7 +255,7 @@ export default function Register() {
               >
                 Register
               </button>
-              <div>
+              <div className="mx-auto mb-10">
                 <span className="text-base">Back to Login </span>
                 <a
                   className="text-base text-blue-500"
