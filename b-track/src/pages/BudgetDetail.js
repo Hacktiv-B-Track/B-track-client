@@ -37,6 +37,7 @@ export default function BudgetDetail() {
     //! mapping buat chart
     let label = [];
     let data = [];
+    console.log(transactions,'------data');
     const sorted = transactions?.Transactions?.sort(
       (a, b) => new Date(a.date) - new Date(b.date)
     );
@@ -52,8 +53,8 @@ export default function BudgetDetail() {
       label: "Budget Utilization",
       data: data,
       fill: true,
-      backgroundColor: "rgb(255, 99, 132)",
-      borderColor: "rgba(255, 99, 132, 0.2)",
+      backgroundColor: "#60A5FA",
+      borderColor: "#60A5FA",
     };
     setLineLabel(label);
     setLineData(dataSets);

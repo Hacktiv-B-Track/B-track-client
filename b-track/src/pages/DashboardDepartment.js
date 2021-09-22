@@ -14,6 +14,7 @@ export default function DashboardDepartment() {
   const [DepartmentName] = useState(localStorage.getItem("DepartmentName"));
   const [role] = useState(localStorage.getItem("role"));
   const budgets = useSelector((state) => state.budgets);
+  const loading = useSelector((state) => state.loading);
   let history = useHistory();
 
   useEffect(() => {
@@ -28,7 +29,18 @@ export default function DashboardDepartment() {
     history.push("/budget/" + budgetId);
   }
 
-  console.log(budgets, "DATA");
+  if (loading) {
+    return (
+      <lottie-player
+        src="https://assets9.lottiefiles.com/private_files/lf30_p3pfeg6p.json"
+        className="mx-auto w-96 h-96"
+        background="transparent"
+        speed="1"
+        loop
+        autoplay
+      ></lottie-player>
+    );
+  }
 
   return (
     <>
@@ -65,7 +77,7 @@ export default function DashboardDepartment() {
                 {budgets.map((budget) => {
                   return (
                     <div 
-                        onClick={()=>budget.status !== 'Rejected' && handleClick(budget.id) || null}
+                        onClick={()=>budget.status !== 'Rejected' && budget.status !== 'Unapproved' && handleClick(budget.id) || null}
                         key={budget.id} 
                         className="p-4 border-4 group hover:bg-white hover:shadow-lg hover:border-invisible cursor-pointer"
                         >
