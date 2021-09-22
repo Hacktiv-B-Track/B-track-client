@@ -5,6 +5,7 @@ import axios from "../apis/server";
 import { toast } from "react-toastify";
 import { useEffect } from "react";
 import { fetchDepartments } from "../store/action";
+import Logo from "../assets/images/logo_putih.png";
 
 export default function Register() {
   const departments = useSelector((state) => state.departments);
@@ -31,50 +32,54 @@ export default function Register() {
     }
   }, [department, role]);
 
-    function handleSubmit(e) {
-        e.preventDefault()
-        axios.post('/register', {
-            email, username, password, DepartmentId:department, role
-        })
-        .then(res => {
-            toast('Register Succesful!', {
-                position: "top-right",
-                autoClose: 5000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                });
-            history.push('/login')
-        })
-        .catch(error=>{
-            if (error.response) {
-                // Request made and server responded
-                error.response.data.message.map((err) =>
-                    toast.error(err, {
-                    position: "top-center",
-                    autoClose: 3000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    })
-                );
-                console.log(error.response.data);
-                console.log(error.response.status);
-                console.log(error.response.headers);
-            } else if (error.request) {
-                // The request was made but no response was received
-                console.log(error.request);
-            } else {
-                // Something happened in setting up the request that triggered an Error
-                console.log('Error', error.message);
-            }   
-        })
-      }
-
+  function handleSubmit(e) {
+    e.preventDefault();
+    axios
+      .post("/register", {
+        email,
+        username,
+        password,
+        DepartmentId: department,
+        role,
+      })
+      .then((res) => {
+        toast("Register Succesful!", {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+        history.push("/login");
+      })
+      .catch((error) => {
+        if (error.response) {
+          // Request made and server responded
+          error.response.data.message.map((err) =>
+            toast.error(err, {
+              position: "top-center",
+              autoClose: 3000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+            })
+          );
+          console.log(error.response.data);
+          console.log(error.response.status);
+          console.log(error.response.headers);
+        } else if (error.request) {
+          // The request was made but no response was received
+          console.log(error.request);
+        } else {
+          // Something happened in setting up the request that triggered an Error
+          console.log("Error", error.message);
+        }
+      });
+  }
 
   function handleSubmit(e) {
     e.preventDefault();
@@ -180,9 +185,13 @@ export default function Register() {
   return (
     <>
       <div className="flex items-center justify-center min-h-screen bg-blue-500 min-w-screen">
-        <div className="w-6/12 rounded-lg bg-gray-50 h-70v">
+        <div className="w-6/12 bg-white rounded-lg h-70v">
           <div className="flex flex-col items-center justify-center h-full px-3 ">
-            <p className="mb-8 text-5xl text-center text-blue-500">Register</p>
+            {/* Logo */}
+            <div className="flex flex-col items-center w-full space-x-16">
+              <img className="w-1/4 ml-12" src={Logo} alt="" />
+              <p className="mb-8 text-5xl text-blue-500 ">Register</p>
+            </div>
 
             <form onSubmit={handleSubmit} className="flex flex-col w-full">
               <input

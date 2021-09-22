@@ -52,6 +52,11 @@ export default function FormTransactionModal(props) {
           setNamePrice(idrCurrency(res.amount));
           setName(res.name);
           setFile(res.invoice);
+          setImageUrl(res.invoice);
+          console.log(
+            "🚀 ~ file: FormTransactionModal.js ~ line 55 ~ .then ~ res.invoice",
+            res.invoice
+          );
           setDate(editFormDate(res.date));
           setCategory(res.Category.id);
         })
@@ -110,10 +115,10 @@ export default function FormTransactionModal(props) {
       date: newDate,
       amount: price,
       CategoryId: category,
-      // invoice: imageUrl,
+      invoice: imageUrl,
       //! testing add, biar irit OCR
-      invoice:
-        "https://ik.imagekit.io/ddtyiwgu4rm/invoice-kledo-1_pHFD1g4Hv.jpg",
+      // invoice:
+      //   "https://ik.imagekit.io/ddtyiwgu4rm/invoice-kledo-1_pHFD1g4Hv.jpg",
     };
     if (props.id) {
       dispatch(editTransaction(data, props.id, budgetId));
