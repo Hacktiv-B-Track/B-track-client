@@ -40,7 +40,6 @@ export default function BudgetDetail() {
     const sorted = transactions?.Transactions?.sort(
       (a, b) => new Date(a.date) - new Date(b.date)
     );
-    console.log(sorted);
     sorted?.map((el) => {
       label.push(format(new Date(el.date), "d MMM yy"));
       data.push(el.amount);
