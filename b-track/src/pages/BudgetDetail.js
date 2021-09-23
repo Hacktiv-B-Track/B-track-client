@@ -35,6 +35,7 @@ export default function BudgetDetail() {
 
   useEffect(() => {
     //! mapping buat chart
+    dispatch(loadingToggle(true));
     let label = [];
     let data = [];
     const sorted = transactions?.Transactions?.sort(
@@ -44,10 +45,6 @@ export default function BudgetDetail() {
       label.push(format(new Date(el.date), "d MMM yy"));
       data.push(el.amount);
     });
-    // transactions?.Transactions.map((el) => {
-    //   label.push(getDate(el.date));
-    //   data.push(el.amount);
-    // });
     let dataSets = {
       label: "Budget Utilization",
       data: data,
@@ -57,6 +54,7 @@ export default function BudgetDetail() {
     };
     setLineLabel(label);
     setLineData(dataSets);
+    dispatch(loadingToggle(false));
   }, [transactions]);
 
   const showModal = (transactionId) => {
@@ -90,11 +88,17 @@ export default function BudgetDetail() {
       .catch((err) => console.log(err));
   };
 
+  const lottiStyle = {
+    width: "10rem",
+    margin: "0 auto",
+    marginTop: "25rem"
+  };
+
   if (isLoading) {
     return (
       <lottie-player
         src="https://assets9.lottiefiles.com/private_files/lf30_p3pfeg6p.json"
-        className="mx-auto w-96 h-96"
+        style={lottiStyle}
         background="transparent"
         speed="1"
         loop
@@ -274,7 +278,8 @@ export default function BudgetDetail() {
                         </div>
                       </td>
                       <td className="px-6 py-4 text-lg leading-5 text-blue-900 whitespace-no-wrap border-b border-gray-500 ">
-                        {getDate(transaction.date)}
+                        {getFinalDate(transaction.date)}
+
                       </td>
                       <td className="px-6 py-4 text-lg leading-5 text-blue-900 whitespace-no-wrap border-b border-gray-500 ">
                         {idrCurrency(transaction.amount)}
