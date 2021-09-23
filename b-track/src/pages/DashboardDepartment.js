@@ -55,11 +55,17 @@ export default function DashboardDepartment() {
     }
   }
 
+  const lottiStyle = {
+    width: "10rem",
+    margin: "0 auto",
+    marginTop: "25rem"
+  };
+
   if (loading) {
     return (
       <lottie-player
         src="https://assets9.lottiefiles.com/private_files/lf30_p3pfeg6p.json"
-        className="mx-auto w-96 h-96"
+        style={lottiStyle}
         background="transparent"
         speed="1"
         loop
