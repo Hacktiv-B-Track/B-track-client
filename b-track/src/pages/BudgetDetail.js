@@ -91,7 +91,7 @@ export default function BudgetDetail() {
   const lottiStyle = {
     width: "10rem",
     margin: "0 auto",
-    marginTop: "25rem"
+    marginTop: "25rem",
   };
 
   if (isLoading) {
@@ -219,6 +219,7 @@ export default function BudgetDetail() {
               </button>
             )}
 
+            {localStorage.getItem("role") !== "staff_department" && (
               <button
                 className="px-5 py-2 mb-10 ml-5 text-blue-500 transition duration-300 border border-blue-500 rounded hover:bg-blue-700 hover:text-white focus:outline-none"
                 onClick={() => generatePDF(transactions)}
@@ -241,6 +242,7 @@ export default function BudgetDetail() {
                   <span>Download PDF Report</span>
                 </div>
               </button>
+            )}
 
             <table className="min-w-full mb-10">
               <thead>
@@ -277,7 +279,6 @@ export default function BudgetDetail() {
                       </td>
                       <td className="px-6 py-4 text-lg leading-5 text-blue-900 whitespace-no-wrap border-b border-gray-500 ">
                         {getFinalDate(transaction.date)}
-
                       </td>
                       <td className="px-6 py-4 text-lg leading-5 text-blue-900 whitespace-no-wrap border-b border-gray-500 ">
                         {idrCurrency(transaction.amount)}
